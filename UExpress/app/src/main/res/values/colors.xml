@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#176ce3</color>
+    <color name="colorPrimaryDark">#176ce3</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="list_line">#E2E2E2</color>
+    <color name="white">#FFFFFF</color>
+    <color name="gray">#FF666666</color>
+    <color name="gray_font_1">#666666</color>
+    <color name="gray_font_2">#333333</color>
+    <color name="gray_font_3">#999999</color>
+    <color name="gray_font_5">#c7c7cc</color>
+    <color name="gray_font_6">#9ba1ad</color>
+    <color name="gray_selector">#f2f2f2</color>
+
+    <!--底部点击颜色-->
+    <color name="bottom_click">#176ce3</color>
+    <color name="bottom_normal">#707070</color>
+</resources>
