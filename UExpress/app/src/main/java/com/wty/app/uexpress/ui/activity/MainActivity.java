@@ -49,6 +49,11 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initView(){
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         homeTabLayout.removeAllViews();
         fragments.clear();
         List<HomeTab> tabs = new ArrayList<>();
@@ -89,6 +94,9 @@ public class MainActivity extends BaseActivity {
                     handleFragment(tab.tag,"");
                 }
                 lastTab = tab;
+                if(fragments.get(tab.tag).isAdded()){
+                    fragments.get(tab.tag).handleActionBar();
+                }
             }
 
             tabView.setOnClickListener(new View.OnClickListener() {
@@ -103,6 +111,9 @@ public class MainActivity extends BaseActivity {
                     handleFragment(tab.tag,lastTab.tag);
                     lastTab.onUnSelect();
                     lastTab=tab;
+                    if(fragments.get(tab.tag).isAdded()){
+                        fragments.get(tab.tag).handleActionBar();
+                    }
                 }
             });
         }
@@ -112,6 +123,7 @@ public class MainActivity extends BaseActivity {
             lastTab = tabs.get(0);
             lastTab.onSelect();
             handleFragment(lastTab.tag,"");
+            fragments.get(lastTab.tag).handleActionBar();
         }
     }
 
@@ -192,6 +204,7 @@ public class MainActivity extends BaseActivity {
             transaction.show(fragment);
         }
         transaction.commit();
+        getSupportFragmentManager().executePendingTransactions();
     }
 
     /**

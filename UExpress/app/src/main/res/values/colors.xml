@@ -2,7 +2,8 @@
 <resources>
     <color name="colorPrimary">#176ce3</color>
     <color name="colorPrimaryDark">#176ce3</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#176ce3</color>
+    <color name="layout_background">#f2f2f2</color>
 
     <color name="list_line">#E2E2E2</color>
     <color name="white">#FFFFFF</color>

@@ -2,24 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <FrameLayout
-        android:id="@+id/main_container"
+    <android.support.design.widget.TabLayout
+        android:id="@+id/fragment_home_tablayout"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        app:tabIndicatorColor="@color/bottom_click"
+        app:tabGravity="fill"
+        app:tabMode="fixed">
+    </android.support.design.widget.TabLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/fragment_home_viewpager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="0.5dip"
-        android:background="@color/list_line" />
-
-    <LinearLayout
-        android:id="@+id/home_tab_layout"
-        android:layout_width="match_parent"
-        android:layout_height="55dip"
-        android:background="@drawable/selector_white"
-        android:orientation="horizontal" />
 
 </LinearLayout>

@@ -1,10 +1,5 @@
 package com.wty.app.uexpress.ui.fragment;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.wty.app.uexpress.R;
 import com.wty.app.uexpress.ui.BaseFragment;
 
@@ -17,26 +12,25 @@ public class SearchFragment extends BaseFragment {
     public static final String TAG = "SearchFragment";
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanState) {
-        super.onCreateView(inflater,container,savedInstanState);
-        if(rootView == null){
-            rootView = inflater.inflate(R.layout.activity_main, container,false);
-        }
-        return rootView;
+    protected void doWorkOnResume() {
+
     }
 
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if(isInitView()){
-            if(isVisibleToUser){
-                refreshView();
-            }
-        }
+    protected int getLayoutResource() {
+        return R.layout.activity_main;
     }
 
-    private void refreshView(){
+    @Override
+    protected void onInitView() {
 
+    }
+
+    @Override
+    public void handleActionBar() {
+        activity.getDefaultNavigation().setTitle(getString(R.string.app_name))
+                .getLeftButton()
+                .hide();
     }
 
 }
