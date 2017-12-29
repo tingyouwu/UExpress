@@ -59,11 +59,6 @@ public class ORMManager<T extends BaseDB> {
 		localDBMap.put(xtion_dbname, helper);
 	}
 
-	public boolean isExistSqliteOpenHelper(String xtion_dbname){
-		T db = localDBMap.get(xtion_dbname);
-        return db != null;
-    }
-
 	/**
 	 * 功能描述：退出应用必须要调用该方法，用于清除所有缓存对象
 	 **/

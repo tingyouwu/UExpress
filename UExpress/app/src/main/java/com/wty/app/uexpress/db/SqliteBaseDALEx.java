@@ -40,7 +40,7 @@ public abstract class SqliteBaseDALEx implements Serializable,Cloneable {
 	 * @Decription 创建数据库某一张表表名
 	 **/
 	protected String createTableName(){
-		return "xwmcrm_t_" + this.getClass().getSimpleName();
+		return this.getClass().getSimpleName();
 	}
 
 	/**
@@ -854,6 +854,30 @@ public abstract class SqliteBaseDALEx implements Serializable,Cloneable {
 
 	}
 
+	/**
+	 * @Decription 计算总条数
+	 **/
+	public int countSize(){
+		int result = 0;
+		Cursor cursor = null;
+		try {
+			BaseDB db = getDB();
+			if (db.isTableExits(TABLE_NAME)) {
+				cursor = db.find("select count(*) from " + TABLE_NAME,new String[]{});
+				if (cursor != null && cursor.moveToNext()) {
+					result = cursor.getInt(0);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (cursor != null && !cursor.isClosed()) {
+				cursor.close();
+			}
+		}
+
+		return result;
+	}
 
     /**
 	 * @Decription 根据sql语句来计算数目

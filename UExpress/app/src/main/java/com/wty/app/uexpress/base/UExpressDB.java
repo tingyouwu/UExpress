@@ -6,14 +6,13 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.wty.app.uexpress.db.BaseDB;
 
-
 /**
  * 应用数据库
  **/
 public class UExpressDB extends BaseDB {
 
-	public UExpressDB(Context context, String dbName, int dbVersion) {
-		super(context, dbName,dbVersion);
+	public UExpressDB(Context context, String dbname,int dbVersion) {
+		super(context, dbname,dbVersion);
 	}
 
 	@Override

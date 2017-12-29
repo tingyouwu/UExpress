@@ -1,5 +1,6 @@
 package com.wty.app.uexpress.ui.activity;
 
+import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
@@ -10,12 +11,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.wty.app.uexpress.R;
+import com.wty.app.uexpress.data.BaseResponseEntity;
+import com.wty.app.uexpress.data.GetExpressListEntity;
+import com.wty.app.uexpress.db.entity.EntityCompanyDALEx;
+import com.wty.app.uexpress.task.SimpleTask;
 import com.wty.app.uexpress.ui.BaseActivity;
 import com.wty.app.uexpress.ui.BaseFragment;
-import com.wty.app.uexpress.ui.fragment.ExpressFragment;
+import com.wty.app.uexpress.ui.fragment.CompanyFragment;
 import com.wty.app.uexpress.ui.fragment.HomeFragment;
 import com.wty.app.uexpress.ui.fragment.SearchFragment;
 import com.wty.app.uexpress.ui.fragment.SettingFragment;
+import com.wty.app.uexpress.util.CoreCommonUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,6 +41,7 @@ public class MainActivity extends BaseActivity {
 
     Map<String,BaseFragment> fragments = new HashMap<>(4);
     private HomeTab lastTab;
+    private SimpleTask datatask;
 
     @Override
     protected int getContentLayout() {
@@ -45,15 +52,14 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         fragments.clear();
+        if(datatask!=null && datatask.getStatus() == AsyncTask.Status.RUNNING){
+            datatask.cancel(true);
+        }
     }
 
     @Override
     protected void initView(){
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
+        initExpressList();
         homeTabLayout.removeAllViews();
         fragments.clear();
         List<HomeTab> tabs = new ArrayList<>();
@@ -128,6 +134,45 @@ public class MainActivity extends BaseActivity {
     }
 
     /**
+     * 首次安装app需要初次加载 快递公司数据到数据表中
+     **/
+    private void initExpressList(){
+        if(datatask != null && datatask.getStatus() == AsyncTask.Status.RUNNING){
+            return;
+        }
+
+        datatask = new SimpleTask(){
+
+            @Override
+            protected Object doInBackground(String... params) {
+                if(EntityCompanyDALEx.get().countSize()==0){
+                    //先处理本地的文件  导入到数据库
+                    return CoreCommonUtil.loadJsonFile(MainActivity.this, "express_company.json");
+                }
+                return "";
+            }
+
+            @Override
+            protected void onPostExecute(Object o) {
+                String json = (String) o;
+                if(!TextUtils.isEmpty(json)){
+                    new GetExpressListEntity().handleResponse(json, new BaseResponseEntity.OnResponseListener<GetExpressListEntity>() {
+                        @Override
+                        public void onSuccess(String json, GetExpressListEntity response) {
+                            EntityCompanyDALEx.get().saveOrUpdateQuick(response.data);
+                        }
+
+                        @Override
+                        public void onTimeout() {
+                        }
+                    });
+                }
+            }
+        };
+        datatask.startTask();
+    }
+
+    /**
      * 添加 CRMFragment
      * @param isSelect 是否默认显示
      **/
@@ -154,15 +199,15 @@ public class MainActivity extends BaseActivity {
     }
 
     /**
-     * 添加 ExpressFragment
+     * 添加 CompanyFragment
      * @param isSelect 是否默认显示
      **/
     private HomeTab addExpressFragment(boolean isSelect){
-        BaseFragment fragment = new ExpressFragment();
+        BaseFragment fragment = new CompanyFragment();
         fragment.setActivity(this);
-        fragments.put(ExpressFragment.TAG,fragment);
+        fragments.put(CompanyFragment.TAG,fragment);
         HomeTab tab_crm = new HomeTab(R.mipmap.bottom_notice_normal, R.mipmap.bottom_notice_click,
-                "寄快递",ExpressFragment.TAG,isSelect);
+                "寄快递", CompanyFragment.TAG,isSelect);
         return tab_crm;
     }
 

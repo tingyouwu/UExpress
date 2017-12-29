@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/item_index"
+        android:layout_width="fill_parent"
+        android:layout_height="25dip"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dip"
+        android:textColor="@color/bottom_normal"
+        android:textSize="13sp"
+        tools:text="常用" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="60dip"
+        android:background="@drawable/selector_white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/item_checkbox"
+            android:layout_width="25dip"
+            android:layout_height="25dip"
+            android:layout_marginLeft="10dip"
+            android:background="@drawable/checkbox_selector"
+            android:visibility="gone"
+            android:button="@null" />
+
+        <com.wty.app.uexpress.widget.roundedimageview.RoundedImageView
+            android:id="@+id/item_icon"
+            android:layout_width="40dip"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:scaleType="centerCrop"
+            app:riv_mutate_background="true"
+            app:riv_oval="true" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/item_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                tools:text="李小璐" />
+
+            <TextView
+                android:id="@+id/item_phonenum"
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxWidth="200dip"
+                android:singleLine="true"
+                android:textColor="@color/gray_font_3"
+                android:textSize="14sp"
+                tools:text="www.baidu.com" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/img_phone"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="10dp"
+            android:padding="5dp"
+            android:src="@mipmap/img_mobile" />
+
+    </LinearLayout>
+</LinearLayout>
