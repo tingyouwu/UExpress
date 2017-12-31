@@ -70,8 +70,10 @@ public class LoadingMoreFooter extends LinearLayout {
         loadingDoneHint = (String)getContext().getText(R.string.loading_done);
         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins( (int)getResources().getDimension(R.dimen.textandiconmargin),0,0,0 );
-
+        //设置padding值
+        mText.setPadding(0, 15, 0, 15);
         mText.setLayoutParams(layoutParams);
+
         addView(mText);
     }
 

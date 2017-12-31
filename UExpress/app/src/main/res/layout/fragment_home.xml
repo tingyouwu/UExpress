@@ -5,18 +5,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/fragment_home_tablayout"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        app:tabIndicatorColor="@color/bottom_click"
-        app:tabGravity="fill"
-        app:tabMode="fixed">
-    </android.support.design.widget.TabLayout>
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/fragment_home_tablayout"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            app:tabIndicatorColor="@color/bottom_click"
+            app:tabGravity="fill"
+            app:tabMode="fixed">
+        </android.support.design.widget.TabLayout>
+
+        <ImageView
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id = "@+id/iv_search"
+            android:src="@mipmap/ic_search"/>
+    </LinearLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/fragment_home_viewpager"
         android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
         android:layout_height="0dp"
         android:layout_weight="1"/>
 

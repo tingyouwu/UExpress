@@ -1,40 +1,32 @@
 package com.wty.app.uexpress.ui.fragment;
 
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
+import android.content.Context;
 
 import com.wty.app.uexpress.R;
-import com.wty.app.uexpress.ui.BaseFragment;
-import com.wty.app.uexpress.ui.adapter.TabFragmentAdapter;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import butterknife.BindView;
+import com.wty.app.uexpress.db.entity.EntityExpressDALEx;
+import java.util.List;
 
 /**
  * @author wty
  *         回收站
  */
-public class ExpressDeleteFragment extends BaseFragment {
+public class ExpressDeleteFragment extends BaseExpressFragment {
 
-    @BindView(R.id.fragment_home_tablayout)
-    TabLayout tablayout;
-    @BindView(R.id.fragment_home_viewpager)
-    ViewPager viewpager;
+    public static final String TAG = "回收站";
 
-    @Override
-    protected int getLayoutResource() {
-        return R.layout.fragment_home;
+    public ExpressDeleteFragment() {
+        super();
     }
 
     @Override
-    protected void onInitView() {
-
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        emptytext_up = getString(R.string.recyclerbin_empty);
+        emptytext_down = "";
     }
 
     @Override
-    protected void doWorkOnResume() {
-
+    protected List<EntityExpressDALEx> queryList() {
+        return EntityExpressDALEx.get().queryDelete();
     }
 }

@@ -1,4 +1,4 @@
-package com.wty.app.uexpress.widget;
+package com.wty.app.uexpress.widget.common;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

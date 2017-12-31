@@ -1,8 +1,14 @@
 package com.wty.app.uexpress.ui.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import com.wty.app.uexpress.R;
+import com.wty.app.uexpress.base.BroadcastConstants;
+import com.wty.app.uexpress.base.UExpressConstant;
 import com.wty.app.uexpress.ui.BaseFragment;
 import com.wty.app.uexpress.ui.adapter.TabFragmentAdapter;
 
@@ -23,18 +29,54 @@ public class HomeFragment extends BaseFragment {
     @BindView(R.id.fragment_home_viewpager)
     ViewPager viewpager;
 
+    BroadcastReceiver receiver;
+    Map<String,BaseFragment> fragments = new LinkedHashMap<>();
+
     @Override
     protected int getLayoutResource() {
         return R.layout.fragment_home;
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(receiver == null){
+            receiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    String fragmentTag = intent.getStringExtra(UExpressConstant.TAG_FRAGMENT);
+                    int index = 0;
+                    for(String tag:fragments.keySet()){
+                        if(tag.equals(fragmentTag)){
+                            viewpager.setCurrentItem(index);
+                            tablayout.getTabAt(index).select();
+                        }
+                        index++;
+                    }
+                }
+            };
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(BroadcastConstants.CHANGE_FRAGMENT_TAB);
+            activity.registerReceiver(receiver, filter);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(receiver != null){
+            activity.unregisterReceiver(receiver);
+            receiver = null;
+        }
+        fragments.clear();
+    }
+
+    @Override
     protected void onInitView() {
-        Map<String,BaseFragment> fragments = new LinkedHashMap<>();
-        fragments.put("全部",new ExpressAllFragment());
-        fragments.put("未签收",new ExpressUnCheckFragment());
-        fragments.put("已签收",new ExpressCheckFragment());
-        fragments.put("回收站",new ExpressDeleteFragment());
+        fragments.put(ExpressAllFragment.TAG,new ExpressAllFragment());
+        fragments.put(ExpressUnCheckFragment.TAG,new ExpressUnCheckFragment());
+        fragments.put(ExpressCheckFragment.TAG,new ExpressCheckFragment());
+        fragments.put(ExpressDeleteFragment.TAG,new ExpressDeleteFragment());
         for(BaseFragment fragment:fragments.values()){
             fragment.setActivity(activity);
         }
@@ -45,7 +87,7 @@ public class HomeFragment extends BaseFragment {
     }
 
     @Override
-    protected void doWorkOnResume() {
+    public void doWorkOnResume() {
 
     }
 

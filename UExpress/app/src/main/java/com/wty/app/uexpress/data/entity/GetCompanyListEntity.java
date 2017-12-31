@@ -1,4 +1,4 @@
-package com.wty.app.uexpress.data;
+package com.wty.app.uexpress.data.entity;
 
 import com.orhanobut.logger.Logger;
 import com.wty.app.uexpress.db.entity.EntityCompanyDALEx;
@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * 获取快递公司列表
  */
-public class GetExpressListEntity extends BaseResponseEntity {
+public class GetCompanyListEntity extends BaseResponseEntity {
 
     public List<EntityCompanyDALEx> data;
 
@@ -26,10 +26,10 @@ public class GetExpressListEntity extends BaseResponseEntity {
 
         String json = requestJson();
         //内部消化
-        return handleResponse(json, new OnResponseListener<GetExpressListEntity>() {
+        return handleResponse(json, new OnResponseListener<GetCompanyListEntity>() {
 
             @Override
-            public void onSuccess(String json, GetExpressListEntity response) {
+            public void onSuccess(String json, GetCompanyListEntity response) {
                 EntityCompanyDALEx.get().saveOrUpdateQuick(response.data);
             }
 

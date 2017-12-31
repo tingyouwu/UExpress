@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.wty.app.uexpress.R;
 import com.wty.app.uexpress.db.entity.EntityCompanyDALEx;
 import com.wty.app.uexpress.util.AppImageLoader;
+import com.wty.app.uexpress.util.CoreCommonUtil;
 import com.wty.app.uexpress.util.CoreImageURLUtils;
 import com.wty.app.uexpress.util.CorePinYinUtil;
 import com.wty.app.uexpress.widget.roundedimageview.RoundedImageView;
@@ -78,6 +79,13 @@ public class ExpressCompanyListAdapter extends BaseRecyclerViewAdapter<EntityCom
             }
         }
 
+        iv_phone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CoreCommonUtil.usePhoneCall(mContext,item.getContact());
+            }
+        });
+
     }
 
     public void init() {
@@ -96,13 +104,19 @@ public class ExpressCompanyListAdapter extends BaseRecyclerViewAdapter<EntityCom
         }
     }
 
+    /***
+     * 获取字母对应的索引编号
+     */
     public Map<String, Integer> getAlphaIndexer() {
         if (alphaIndexer == null) {
-            alphaIndexer = new HashMap<String, Integer>();
+            alphaIndexer = new HashMap<>();
         }
         return alphaIndexer;
     }
 
+    /**
+     * 获取字母列表
+     **/
     public List<String> getAlphaList() {
         List<String> list = new ArrayList<>();
         if (alphaIndexer == null) {

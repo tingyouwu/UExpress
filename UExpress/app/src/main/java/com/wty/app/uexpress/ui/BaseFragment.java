@@ -104,7 +104,7 @@ public abstract class BaseFragment extends Fragment {
 	/**
 	 * 当fragment处于可见并且已经初始之后，做一些操作
 	 **/
-	abstract protected void doWorkOnResume();
+	abstract public void doWorkOnResume();
 	/**
 	 * 获取布局文件
 	 **/
@@ -113,4 +113,11 @@ public abstract class BaseFragment extends Fragment {
 	 * View初始化工作,包括listview的adapter绑定，view显示效果
 	 **/
 	abstract protected void onInitView();
+
+	/***
+	 * 用于切换tab时修改一些值
+	 */
+	public void handleOnShow(){
+
+	}
 }

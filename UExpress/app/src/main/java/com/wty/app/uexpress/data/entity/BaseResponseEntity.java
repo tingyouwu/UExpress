@@ -1,4 +1,4 @@
-package com.wty.app.uexpress.data;
+package com.wty.app.uexpress.data.entity;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -53,7 +53,8 @@ public abstract class BaseResponseEntity {
 		String url = makeUrl();
 		//只捕抓http内部exception
 		if(method== HttpUtilCore.Method.Get){
-			json = HttpUtil.getToService(url);
+			String args = createArgs(params);
+			json = HttpUtil.getToService(url+args);
 		}else{
 			String args = createArgs(params);
 			json = HttpUtil.postToService(url, args);
@@ -80,7 +81,7 @@ public abstract class BaseResponseEntity {
                 }
 
 				if(onResponseListener!=null){
-						onResponseListener.onSuccess(json,response);
+					onResponseListener.onSuccess(json,response);
 				}
 				return "200";
 			}else{

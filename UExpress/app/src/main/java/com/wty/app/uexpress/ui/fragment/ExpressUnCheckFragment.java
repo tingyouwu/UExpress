@@ -1,39 +1,33 @@
 package com.wty.app.uexpress.ui.fragment;
 
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
+
+import android.content.Context;
 
 import com.wty.app.uexpress.R;
-import com.wty.app.uexpress.ui.BaseFragment;
-import com.wty.app.uexpress.ui.adapter.TabFragmentAdapter;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import butterknife.BindView;
+import com.wty.app.uexpress.db.entity.EntityExpressDALEx;
+import java.util.List;
 
 /**
  * @author wty
  *         未签收
  */
-public class ExpressUnCheckFragment extends BaseFragment {
+public class ExpressUnCheckFragment extends BaseExpressFragment {
 
-    @BindView(R.id.fragment_home_tablayout)
-    TabLayout tablayout;
-    @BindView(R.id.fragment_home_viewpager)
-    ViewPager viewpager;
+    public static final String TAG = "未签收";
 
-    @Override
-    protected int getLayoutResource() {
-        return R.layout.fragment_home;
+    public ExpressUnCheckFragment() {
+        super();
     }
 
     @Override
-    protected void onInitView() {
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        emptytext_up = getString(R.string.express_uncheck_empty);
+        emptytext_down = getString(R.string.click_add);
     }
 
     @Override
-    protected void doWorkOnResume() {
-
+    protected List<EntityExpressDALEx> queryList() {
+        return EntityExpressDALEx.get().queryUnCheck();
     }
 }

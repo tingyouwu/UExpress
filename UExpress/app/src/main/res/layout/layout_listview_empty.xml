@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_centerInParent="true"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <ImageView
+        android:id="@+id/listview_empty_img"
+        android:layout_width="80dip"
+        android:layout_height="80dip"
+        android:src="@mipmap/icon_no_data" />
+
+    <TextView
+        android:id="@+id/listview_empty_textup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dip"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:textColor="@color/gray_font_3"
+        android:text="数据为空" />
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/listview_empty_textdown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dip"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:textColor="@color/gray_font_3"
+        android:text="数据为空" />
+
+    <TextView
+        android:visibility="gone"
+        android:layout_marginTop="20dp"
+        android:id="@+id/tv_refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:textColor="@color/bottom_click"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:gravity="center"
+        android:background="@drawable/bg_empty"
+        android:text="点击刷新" />
+
+</LinearLayout>

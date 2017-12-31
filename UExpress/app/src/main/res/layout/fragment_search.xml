@@ -2,24 +2,158 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
     android:orientation="vertical">
 
-    <FrameLayout
-        android:id="@+id/main_container"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="0.5dip"
-        android:background="@color/list_line" />
+    <ImageView
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:src="@mipmap/ic_expresscar"
+        android:layout_gravity="center_horizontal"/>
 
     <LinearLayout
-        android:id="@+id/home_tab_layout"
         android:layout_width="match_parent"
-        android:layout_height="55dip"
-        android:background="@drawable/selector_white"
-        android:orientation="horizontal" />
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="bottom">
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="20dp"
+            android:layout_marginRight="10dp"
+            android:src="@mipmap/ico_kuaididan"/>
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginRight="10dp">
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/tv_label_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/express_num"
+                android:paddingBottom="5dp"
+                android:textSize="10sp"
+                android:textColor="@color/bottom_click" />
+
+            <com.wty.app.uexpress.widget.common.ClearEditText
+                android:id="@+id/et_expressnum"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:inputType="phone"
+                android:background="@mipmap/sign_bg"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:hint="@string/input_expressnum"
+                android:textColorHint="@color/gray_font_3"
+                android:textSize="16sp"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/img_scan"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@mipmap/ic_scan"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_height="1dp"
+        android:background="@color/list_line"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:minHeight="40dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="5dp"
+            android:src="@mipmap/ico_company"/>
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginRight="10dp">
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/tv_label_company"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/express_company"
+                android:paddingBottom="5dp"
+                android:textSize="10sp"
+                android:textColor="@color/bottom_click" />
+
+            <TextView
+                android:id="@+id/tv_company"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:background="@mipmap/sign_bg"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:hint="@string/select_company"
+                android:textColorHint="@color/gray_font_3"
+                android:textSize="16sp"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/img_delete"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="5dp"
+            android:padding="4dp"
+            android:src="@mipmap/ic_del_search_normal"/>
+
+        <ImageView
+            android:id="@+id/img_next"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@mipmap/ic_arrow"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_height="1dp"
+        android:background="@color/list_line"/>
+
+    <Button
+        android:id="@+id/btn_confirm"
+        android:layout_marginTop="10dp"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/selector_confirm"
+        android:gravity="center"
+        android:text="@string/search"
+        android:textColor="@color/white"
+        style="?android:attr/borderlessButtonStyle"
+        android:textSize="18sp" />
 
 </LinearLayout>

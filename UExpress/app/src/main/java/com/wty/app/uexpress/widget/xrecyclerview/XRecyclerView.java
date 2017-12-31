@@ -10,7 +10,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -51,6 +50,7 @@ public class XRecyclerView extends RecyclerView {
     private FixedListener mFixedListener;
     //adapter没有数据的时候显示,类似于listView的emptyView
     private View mEmptyView;
+    private View mHeadEmptyView;
     private View mFootView;
     private final RecyclerView.AdapterDataObserver mDataObserver = new DataObserver();
     private AppBarStateChangeListener.State appbarState = AppBarStateChangeListener.State.EXPANDED;
@@ -88,6 +88,19 @@ public class XRecyclerView extends RecyclerView {
     public void addHeaderView(View view) {
         sHeaderTypes.add(HEADER_INIT_INDEX + mHeaderViews.size());
         mHeaderViews.add(view);
+        if (mWrapAdapter != null) {
+            mWrapAdapter.notifyDataSetChanged();
+        }
+    }
+
+    public void addHeaderEmptyView(View view){
+        if(mHeadEmptyView != null){
+            throw new RuntimeException("只能添加一个HeaderEmptyView");
+        }
+        mHeadEmptyView = view;
+        sHeaderTypes.add(HEADER_INIT_INDEX + mHeaderViews.size());
+        mHeaderViews.add(view);
+
         if (mWrapAdapter != null) {
             mWrapAdapter.notifyDataSetChanged();
         }
@@ -183,10 +196,6 @@ public class XRecyclerView extends RecyclerView {
         setNoMore(false);
     }
 
-    public void setRefreshHeader(ArrowRefreshHeader refreshHeader) {
-        mRefreshHeader = refreshHeader;
-    }
-
     public void setPullRefreshEnabled(boolean enabled) {
         pullRefreshEnabled = enabled;
     }
@@ -197,51 +206,6 @@ public class XRecyclerView extends RecyclerView {
             if (mFootView instanceof LoadingMoreFooter) {
                 ((LoadingMoreFooter)mFootView).setState(LoadingMoreFooter.STATE_COMPLETE);
             }
-        }
-    }
-
-    /**
-     * 设置一下下拉刷新的提示语
-     **/
-    public void setRefreshDetail(String normal,String release,String refreshing,String done,boolean dismiss){
-        if(mRefreshHeader != null){
-            if(!TextUtils.isEmpty(normal)){
-                mRefreshHeader.setStatusNorml(normal);
-            }
-
-            if(!TextUtils.isEmpty(release)){
-                mRefreshHeader.setStatusRelease(release);
-            }
-
-            if(!TextUtils.isEmpty(refreshing)){
-                mRefreshHeader.setStatusRefreshing(refreshing);
-            }
-
-            if(!TextUtils.isEmpty(done)){
-                mRefreshHeader.setStatusDone(done);
-            }
-
-            mRefreshHeader.setDimissLastRefreshLayout(dismiss);
-        }
-    }
-
-    public void setRefreshProgressStyle(int style) {
-        mRefreshProgressStyle = style;
-        if (mRefreshHeader != null) {
-            mRefreshHeader.setProgressStyle(style);
-        }
-    }
-
-    public void setLoadingMoreProgressStyle(int style) {
-        mLoadingMoreProgressStyle = style;
-        if (mFootView instanceof LoadingMoreFooter) {
-            ((LoadingMoreFooter) mFootView).setProgressStyle(style);
-        }
-    }
-
-    public void setArrowImageView(int resId) {
-        if (mRefreshHeader != null) {
-            mRefreshHeader.setArrowImageView(resId);
         }
     }
 
@@ -373,6 +337,35 @@ public class XRecyclerView extends RecyclerView {
             if (mWrapAdapter != null) {
                 mWrapAdapter.notifyDataSetChanged();
             }
+            if (mWrapAdapter != null && mHeadEmptyView != null) {
+                int emptyCount = 1 + mWrapAdapter.getHeadersCount();
+                if (loadingMoreEnabled) {
+                    emptyCount++;
+                }
+                if (mWrapAdapter.getItemCount() == emptyCount) {
+                    mHeadEmptyView.setVisibility(View.VISIBLE);
+                    mHeadEmptyView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            RecyclerView.LayoutParams layoutParams = (LayoutParams) mHeadEmptyView.getLayoutParams();
+                            layoutParams.height = getHeight();
+                            layoutParams.width = getWidth();
+                            mHeadEmptyView.setLayoutParams(layoutParams);
+                        }
+                    });
+                } else {
+                    mHeadEmptyView.setVisibility(View.GONE);
+                    mHeadEmptyView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            RecyclerView.LayoutParams layoutParams = (LayoutParams) mHeadEmptyView.getLayoutParams();
+                            layoutParams.height = 0;
+                            layoutParams.width = 0;
+                            mHeadEmptyView.setLayoutParams(layoutParams);
+                        }
+                    });
+                }
+            }
             if (mWrapAdapter != null && mEmptyView != null) {
                 int emptyCount = 1 + mWrapAdapter.getHeadersCount();
                 if (loadingMoreEnabled) {
@@ -382,7 +375,6 @@ public class XRecyclerView extends RecyclerView {
                     mEmptyView.setVisibility(View.VISIBLE);
                     XRecyclerView.this.setVisibility(View.GONE);
                 } else {
-
                     mEmptyView.setVisibility(View.GONE);
                     XRecyclerView.this.setVisibility(View.VISIBLE);
                 }
@@ -679,6 +671,11 @@ public class XRecyclerView extends RecyclerView {
             this(context,divHeight,hasHead,false);
         }
 
+        /***
+         * @param divHeight 分割线高度
+         * @param hasHead 第一项是否去掉分割线
+         * @param onlyhasHead 是否只有第一项才有分割线
+         */
         public DivItemDecoration(Context context,int divHeight, boolean hasHead,boolean onlyhasHead){
             this.divHeight = divHeight;
             this.hasHead = hasHead;

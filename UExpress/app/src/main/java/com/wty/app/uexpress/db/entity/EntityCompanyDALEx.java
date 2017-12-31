@@ -31,9 +31,11 @@ public class EntityCompanyDALEx extends SqliteBaseDALEx {
         return (EntityCompanyDALEx) SqliteDao.getDao(EntityCompanyDALEx.class,true);
     }
 
-    public List<EntityCompanyDALEx> queryAllCompany(){
-        String sql = "SELECT * FROM " + TABLE_NAME + " ORDER BY pinyin COLLATE NOCASE";
-        List<EntityCompanyDALEx> commonlist = findList("SELECT * FROM " + TABLE_NAME + " WHERE iscommon = 1 ORDER BY pinyin COLLATE NOCASE");
+    public List<EntityCompanyDALEx> queryAllCompany(String searchkey){
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE "+ "( name LIKE '%"+searchkey+"%' OR pinyin"
+                +" LIKE '%"+searchkey+"%') " + " ORDER BY pinyin COLLATE NOCASE";
+        List<EntityCompanyDALEx> commonlist = findList("SELECT * FROM " + TABLE_NAME + " WHERE iscommon = 1 AND " + "( name LIKE '%"+searchkey+"%' OR pinyin"
+                +" LIKE '%"+searchkey+"%') " + " ORDER BY pinyin COLLATE NOCASE");
         for(EntityCompanyDALEx company:commonlist){
             company.setPinyin("*");
         }

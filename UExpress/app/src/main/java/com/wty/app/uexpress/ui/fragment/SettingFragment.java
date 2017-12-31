@@ -22,7 +22,7 @@ public class SettingFragment extends BaseFragment {
     }
 
     @Override
-    protected void doWorkOnResume() {
+    public void doWorkOnResume() {
 
     }
 

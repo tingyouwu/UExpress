@@ -1,5 +1,9 @@
 package com.wty.app.uexpress.ui.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -11,8 +15,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.wty.app.uexpress.R;
-import com.wty.app.uexpress.data.BaseResponseEntity;
-import com.wty.app.uexpress.data.GetExpressListEntity;
+import com.wty.app.uexpress.base.BroadcastConstants;
+import com.wty.app.uexpress.base.UExpressConstant;
+import com.wty.app.uexpress.data.entity.BaseResponseEntity;
+import com.wty.app.uexpress.data.entity.GetCompanyListEntity;
 import com.wty.app.uexpress.db.entity.EntityCompanyDALEx;
 import com.wty.app.uexpress.task.SimpleTask;
 import com.wty.app.uexpress.ui.BaseActivity;
@@ -23,9 +29,8 @@ import com.wty.app.uexpress.ui.fragment.SearchFragment;
 import com.wty.app.uexpress.ui.fragment.SettingFragment;
 import com.wty.app.uexpress.util.CoreCommonUtil;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -40,8 +45,10 @@ public class MainActivity extends BaseActivity {
     LinearLayout homeTabLayout;
 
     Map<String,BaseFragment> fragments = new HashMap<>(4);
+    Map<String,HomeTab> homeTabMap = new LinkedHashMap<>(4);
     private HomeTab lastTab;
     private SimpleTask datatask;
+    BroadcastReceiver receiver;
 
     @Override
     protected int getContentLayout() {
@@ -51,9 +58,13 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        fragments.clear();
         if(datatask!=null && datatask.getStatus() == AsyncTask.Status.RUNNING){
             datatask.cancel(true);
+        }
+        fragments.clear();
+        if(receiver != null){
+            unregisterReceiver(receiver);
+            receiver = null;
         }
     }
 
@@ -62,23 +73,35 @@ public class MainActivity extends BaseActivity {
         initExpressList();
         homeTabLayout.removeAllViews();
         fragments.clear();
-        List<HomeTab> tabs = new ArrayList<>();
-        tabs.add(addHomeFragment(true));
-        tabs.add(addSearchFragment(false));
-        tabs.add(addExpressFragment(false));
-        tabs.add(addSetingFragment(false));
-        initHomeTab(tabs);
+        homeTabMap.clear();
+        homeTabMap.put(HomeFragment.TAG,addHomeFragment(true));
+        homeTabMap.put(SearchFragment.TAG,addSearchFragment(false));
+        homeTabMap.put(CompanyFragment.TAG,addCompanyFragment(false));
+        homeTabMap.put(SettingFragment.TAG,addSetingFragment(false));
+        initHomeTab();
+        if(receiver == null){
+            receiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    String fragmentTag = intent.getStringExtra(UExpressConstant.TAG_FRAGMENT);
+                    HomeTab homeTab = homeTabMap.get(fragmentTag);
+                    handleChangeTab(homeTab);
+                }
+            };
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(BroadcastConstants.CHANGE_HOME_TAB);
+            registerReceiver(receiver, filter);
+        }
     }
 
     /**
      * 功能描述：构建底部tab
      */
-    public void initHomeTab(List<HomeTab> tabs) {
-        if(tabs == null || tabs.size() == 0){
+    public void initHomeTab() {
+        if(homeTabMap.size() == 0){
             throw new RuntimeException("请初始化 HomeTab 列表");
         }
-        boolean hasSelect =false;
-        for (final HomeTab tab : tabs) {
+        for (final HomeTab tab : homeTabMap.values()) {
             View tabView = LayoutInflater.from(this).inflate(R.layout.item_home_tab, null);
             TextView tabTitle = (TextView) tabView.findViewById(R.id.home_tab_title);
             ImageView tabIcon = (ImageView)tabView.findViewById(R.id.home_tab_icon);
@@ -90,7 +113,6 @@ public class MainActivity extends BaseActivity {
             homeTabLayout.addView(tabView, params);
 
             if (tab.isSelect) {
-                hasSelect =true;
                 tab.onSelect();
                 if(lastTab != null){
                     handleFragment(tab.tag,lastTab.tag);
@@ -109,27 +131,26 @@ public class MainActivity extends BaseActivity {
 
                 @Override
                 public void onClick(View v) {
-                    if(lastTab == tab){
-                        //相同不需要处理
-                        return;
-                    }
-                    tab.onSelect();
-                    handleFragment(tab.tag,lastTab.tag);
-                    lastTab.onUnSelect();
-                    lastTab=tab;
-                    if(fragments.get(tab.tag).isAdded()){
-                        fragments.get(tab.tag).handleActionBar();
-                    }
+                    handleChangeTab(tab);
                 }
             });
         }
+    }
 
-        if(!hasSelect){
-            //如果一个都没有选中的话  默认选中第一个
-            lastTab = tabs.get(0);
-            lastTab.onSelect();
-            handleFragment(lastTab.tag,"");
-            fragments.get(lastTab.tag).handleActionBar();
+    /**
+     * 切换tab时处理事件
+     **/
+    private void handleChangeTab(HomeTab tab){
+        if(tab == null || lastTab == tab){
+            //相同不需要处理
+            return;
+        }
+        tab.onSelect();
+        handleFragment(tab.tag,lastTab.tag);
+        lastTab.onUnSelect();
+        lastTab=tab;
+        if(fragments.get(tab.tag).isAdded()){
+            fragments.get(tab.tag).handleActionBar();
         }
     }
 
@@ -156,9 +177,9 @@ public class MainActivity extends BaseActivity {
             protected void onPostExecute(Object o) {
                 String json = (String) o;
                 if(!TextUtils.isEmpty(json)){
-                    new GetExpressListEntity().handleResponse(json, new BaseResponseEntity.OnResponseListener<GetExpressListEntity>() {
+                    new GetCompanyListEntity().handleResponse(json, new BaseResponseEntity.OnResponseListener<GetCompanyListEntity>() {
                         @Override
-                        public void onSuccess(String json, GetExpressListEntity response) {
+                        public void onSuccess(String json, GetCompanyListEntity response) {
                             EntityCompanyDALEx.get().saveOrUpdateQuick(response.data);
                         }
 
@@ -202,7 +223,7 @@ public class MainActivity extends BaseActivity {
      * 添加 CompanyFragment
      * @param isSelect 是否默认显示
      **/
-    private HomeTab addExpressFragment(boolean isSelect){
+    private HomeTab addCompanyFragment(boolean isSelect){
         BaseFragment fragment = new CompanyFragment();
         fragment.setActivity(this);
         fragments.put(CompanyFragment.TAG,fragment);
@@ -247,6 +268,7 @@ public class MainActivity extends BaseActivity {
             transaction.add(R.id.main_container, fragment, newTag);
         } else {
             transaction.show(fragment);
+            ((BaseFragment)fragment).handleOnShow();
         }
         transaction.commit();
         getSupportFragmentManager().executePendingTransactions();

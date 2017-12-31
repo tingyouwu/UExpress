@@ -15,8 +15,20 @@
     <color name="gray_font_5">#c7c7cc</color>
     <color name="gray_font_6">#9ba1ad</color>
     <color name="gray_selector">#f2f2f2</color>
+    <color name="green">#FF4d8a45</color>
+
+    <color name="float_transparent">#00000000</color>
+    <color name="sweet_dialog_bg_color">#FFFFFF</color>
+    <color name="error_stroke_color">#F27474</color>
+    <color name="trans_success_stroke_color">#33A5DC86</color>
+    <color name="warning_stroke_color">#F8BB86</color>
 
     <!--底部点击颜色-->
     <color name="bottom_click">#176ce3</color>
     <color name="bottom_normal">#707070</color>
+
+    <color name="blue_btn_background2">#73B7EA</color>
+    <color name="blue_btn_bg_color">#AEDEF4</color>
+    <color name="success_stroke_color">#A5DC86</color>
+
 </resources>

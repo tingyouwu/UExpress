@@ -2,12 +2,34 @@
     <string name="app_name">U快递</string>
     <string name="mine">我的</string>
     <!--xrecyclerview-->
-    <string name="listview_header_hint_normal">下拉刷新</string>
-    <string name="listview_header_hint_release">释放刷新</string>
+    <string name="listview_header_hint_normal">下拉可以刷新</string>
+    <string name="listview_header_hint_release">释放立即刷新</string>
     <string name="listview_loading">正在加载...</string>
-    <string name="nomore_loading">没有了</string>
+    <string name="nomore_loading">亲,已经到底了</string>
     <string name="refreshing">正在刷新...</string>
     <string name="refresh_done">刷新完成</string>
     <string name="loading_done">加载完成</string>
     <string name="listview_header_last_time">最近更新：</string>
+
+    <string name="phone_send_express">电话寄件</string>
+    <string name="recyclerbin_empty">回收站空空如也</string>
+    <string name="express_check_empty">您还没有签收的快递记录</string>
+    <string name="express_uncheck_empty">您还没有在途的快递记录</string>
+    <string name="express_record_empty">您还没有快递记录</string>
+    <string name="click_add">点+添加</string>
+    <string name="search_express">查找快递</string>
+    <string name="express_num">快递单号</string>
+    <string name="express_company">快递公司</string>
+    <string name="search">查询</string>
+    <string name="select_company">请选择快递公司</string>
+    <string name="input_expressnum">请输入快递单号</string>
+    <string name="select_express_company">选择快递公司</string>
+    <string name="searching_wait">正在查找，请稍候...</string>
+    <string name="search_result">查询结果</string>
+
+    <string name="add_remark">添加备注</string>
+
+    <!--dialog-->
+    <string name="dialog_cancel">取消</string>
+    <string name="dialog_ok">确认</string>
 </resources>

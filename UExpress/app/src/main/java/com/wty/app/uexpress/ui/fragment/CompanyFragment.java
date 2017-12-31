@@ -1,13 +1,17 @@
 package com.wty.app.uexpress.ui.fragment;
 
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.TextView;
 
 import com.wty.app.uexpress.R;
 import com.wty.app.uexpress.db.entity.EntityCompanyDALEx;
 import com.wty.app.uexpress.ui.BaseFragment;
 import com.wty.app.uexpress.ui.adapter.ExpressCompanyListAdapter;
-import com.wty.app.uexpress.widget.SideBar;
+import com.wty.app.uexpress.util.CoreCommonUtil;
+import com.wty.app.uexpress.widget.common.SearchView;
+import com.wty.app.uexpress.widget.common.SideBar;
 import com.wty.app.uexpress.widget.xrecyclerview.XRecyclerView;
 
 import java.util.ArrayList;
@@ -28,13 +32,15 @@ public class CompanyFragment extends BaseFragment {
     TextView overlay;
     @BindView(R.id.filter_letters)
     SideBar filter_letters;
+    @BindView(R.id.searchview)
+    SearchView searchview;
 
     ExpressCompanyListAdapter adapter;
     private LinearLayoutManager layoutManager;
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.fragment_express;
+        return R.layout.fragment_company;
     }
 
     @Override
@@ -61,19 +67,52 @@ public class CompanyFragment extends BaseFragment {
         List<EntityCompanyDALEx> data = new ArrayList<>();
         adapter = new ExpressCompanyListAdapter(getActivity(),data);
         listview.setAdapter(adapter);
-        adapter.refreshList(EntityCompanyDALEx.get().queryAllCompany());
+        adapter.refreshList(EntityCompanyDALEx.get().queryAllCompany(""));
+        searchview.setHint("快速搜索快递公司");
+        searchview.setOnSearchListener(searchListener);
+        searchview.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus) {
+                    CoreCommonUtil.keyboardControl(getActivity(), false, v);
+                }
+            }
+        });
+
+        listview.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                searchview.getEditText().clearFocus();
+                return false;
+            }
+        });
         filter_letters.setLettersList(adapter.getAlphaList());
     }
 
     @Override
-    protected void doWorkOnResume() {
+    public void doWorkOnResume() {
 
     }
 
     @Override
     public void handleActionBar() {
-        activity.getDefaultNavigation().setTitle(getString(R.string.app_name))
+        activity.getDefaultNavigation().setTitle(getString(R.string.phone_send_express))
                 .getLeftButton()
                 .hide();
     }
+
+    SearchView.OnSearchListener searchListener = new SearchView.OnSearchListener() {
+
+        @Override
+        public void onSearchEmpty() {
+            adapter.refreshList(EntityCompanyDALEx.get().queryAllCompany(""));
+            filter_letters.setLettersList(adapter.getAlphaList());
+        }
+
+        @Override
+        public void onSearchChange(String content) {
+            adapter.refreshList(EntityCompanyDALEx.get().queryAllCompany(content));
+            filter_letters.setLettersList(adapter.getAlphaList());
+        }
+    };
 }
