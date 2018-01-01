@@ -59,6 +59,9 @@ public class EntityExpressDALEx extends SqliteBaseDALEx {
     @DatabaseField(Type = DatabaseField.FieldType.INT)
     //删除状态
     private int recstatus;
+    @DatabaseField(Type = DatabaseField.FieldType.INT)
+    //跟踪信息的条数
+    private int stepsize;
 
     private String companyicon;
     private String companyname;
@@ -70,8 +73,8 @@ public class EntityExpressDALEx extends SqliteBaseDALEx {
     /**
      * 查找所有快递物流信息
      **/
-    public List<EntityExpressDALEx> queryAllWithDelete(String searchkey){
-        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE "+ "( name LIKE '%"+searchkey+"%' OR remark"
+    public List<EntityExpressDALEx> queryAll(String searchkey){
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE "+ "( expressnum LIKE '%"+searchkey+"%' OR remark"
                 +" LIKE '%"+searchkey+"%') " + " ORDER BY datetime(createtime) DESC";
         return findList(sql);
     }
@@ -79,7 +82,7 @@ public class EntityExpressDALEx extends SqliteBaseDALEx {
     /**
      * 查找所有快递物流信息 排查删除状态的
      **/
-    public List<EntityExpressDALEx> queryAllWithDelete(){
+    public List<EntityExpressDALEx> queryAllWithoutDelete(){
         String sql = "SELECT * FROM " + TABLE_NAME + " WHERE recstatus = 1 "+ " ORDER BY datetime(createtime) DESC";
         return findList(sql);
     }
@@ -121,8 +124,19 @@ public class EntityExpressDALEx extends SqliteBaseDALEx {
         if(entity.data !=null && entity.data.size()!=0){
             express.setSteptime(entity.data.get(0).time);
             express.setStepcontext(entity.data.get(0).context);
+            express.setStepsize(entity.data.size());
+        }else {
+            express.setStepsize(0);
         }
         express.saveOrUpdate();
+    }
+
+    public int getStepsize() {
+        return stepsize;
+    }
+
+    public void setStepsize(int stepsize) {
+        this.stepsize = stepsize;
     }
 
     public String getExpressid() {

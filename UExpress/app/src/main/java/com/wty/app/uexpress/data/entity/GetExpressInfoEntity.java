@@ -1,6 +1,7 @@
 package com.wty.app.uexpress.data.entity;
 
 import com.wty.app.uexpress.base.UExpressConstant;
+import com.wty.app.uexpress.data.model.ExpressInfoItemModel;
 import com.wty.app.uexpress.http.HttpUtilCore;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 public class GetExpressInfoEntity extends BaseResponseEntity {
 
     //消息内容 返回ok表示查询到该快递单 或者返回具体错误信息
-    public List<DataModel> data;
+    public List<ExpressInfoItemModel> data;
     //查询结果状态：201物流单暂无结果，200查询成功
     public String status;
     /**
@@ -30,13 +31,6 @@ public class GetExpressInfoEntity extends BaseResponseEntity {
     //物流单号
     public String nu;
 
-    public static class DataModel{
-        //每条跟踪信息的时间
-        public String time;
-        //每条跟综信息的描述
-        public String context;
-    }
-
     @Override
     protected String createArgs(Object... params) {
         //?type=[快递公司名]&postid=快递单号
@@ -52,24 +46,5 @@ public class GetExpressInfoEntity extends BaseResponseEntity {
     public String requestJson(Object... params) {
         method = HttpUtilCore.Method.Get;
         return super.requestJson(params);
-    }
-
-    /***
-     * @param type 快递公司编码
-     * @param postid 快递单号
-     */
-    public String request(String type,String postid){
-        String json =  requestJson(type,postid);
-        return handleResponse(json, new OnResponseListener<GetExpressInfoEntity>() {
-            @Override
-            public void onSuccess(String json, GetExpressInfoEntity response) {
-                int it = 0;
-            }
-
-            @Override
-            public void onTimeout() {
-
-            }
-        });
     }
 }

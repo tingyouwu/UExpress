@@ -1,14 +1,14 @@
 package com.wty.app.uexpress.ui.activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.wty.app.uexpress.R;
-import com.wty.app.uexpress.db.entity.EntityCompanyDALEx;
 import com.wty.app.uexpress.db.entity.EntityExpressDALEx;
 import com.wty.app.uexpress.ui.BaseActivity;
-import com.wty.app.uexpress.ui.adapter.ExpressCompanySelectListAdapter;
 import com.wty.app.uexpress.ui.adapter.ExpressSearchListAdapter;
 import com.wty.app.uexpress.util.CoreCommonUtil;
 import com.wty.app.uexpress.widget.common.SearchView;
@@ -30,7 +30,12 @@ public class ExpressSearchListActivity extends BaseActivity {
     SearchView searchview;
 
     ExpressSearchListAdapter adapter;
-    private LinearLayoutManager layoutManager;
+
+    public static void startActivity(Activity activity){
+        Intent intent = new Intent(activity,ExpressSearchListActivity.class);
+        activity.startActivity(intent);
+        activity.overridePendingTransition(R.anim.translate_right_in, R.anim.translate_fix);
+    }
 
     @Override
     protected int getContentLayout() {
@@ -43,9 +48,15 @@ public class ExpressSearchListActivity extends BaseActivity {
     }
 
     @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.translate_fix, R.anim.translate_right_out);
+    }
+
+    @Override
     protected void initView(){
-        getDefaultNavigation().setTitle(getString(R.string.select_express_company));
-        layoutManager = new LinearLayoutManager(this);
+        getDefaultNavigation().setTitle(getString(R.string.search_express));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         listview.setLayoutManager(layoutManager);
         listview.setPullRefreshEnabled(false);
@@ -55,8 +66,8 @@ public class ExpressSearchListActivity extends BaseActivity {
         List<EntityExpressDALEx> data = new ArrayList<>();
         adapter = new ExpressSearchListAdapter(this,data);
         listview.setAdapter(adapter);
-        adapter.refreshList(EntityExpressDALEx.get().queryAllWithDelete(""));
-        searchview.setHint("快速搜索快递");
+        adapter.refreshList(EntityExpressDALEx.get().queryAll(""));
+        searchview.setHint("输入单号/备注");
         searchview.setOnSearchListener(searchListener);
         searchview.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -80,12 +91,12 @@ public class ExpressSearchListActivity extends BaseActivity {
 
         @Override
         public void onSearchEmpty() {
-            adapter.refreshList(EntityExpressDALEx.get().queryAllWithDelete(""));
+            adapter.refreshList(EntityExpressDALEx.get().queryAll(""));
         }
 
         @Override
         public void onSearchChange(String content) {
-            adapter.refreshList(EntityExpressDALEx.get().queryAllWithDelete(content));
+            adapter.refreshList(EntityExpressDALEx.get().queryAll(content));
         }
     };
 }

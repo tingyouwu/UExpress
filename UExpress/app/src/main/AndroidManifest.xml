@@ -52,6 +52,9 @@
         <activity android:name=".ui.activity.ExpressInfoActivity"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".ui.activity.ExpressSearchListActivity"
+            android:screenOrientation="portrait"/>
+
         <activity android:name="io.github.xudaojie.qrcodelib.CaptureActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"/>

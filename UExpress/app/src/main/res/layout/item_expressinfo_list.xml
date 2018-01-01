@@ -4,11 +4,12 @@
     android:layout_width="fill_parent"
     android:layout_height="60dp"
     android:gravity="center_vertical"
+    android:background="@color/white"
     android:orientation="horizontal">
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="10dp"
         android:orientation="vertical">
@@ -17,6 +18,7 @@
             android:id="@+id/tv_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/bottom_normal"
             android:textSize="12sp"
             tools:text="2017.12.21"/>
 
@@ -24,6 +26,7 @@
             android:id="@+id/tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/bottom_normal"
             android:paddingTop="4dp"
             android:textSize="14sp"
             tools:text="14:20"/>
@@ -57,9 +60,9 @@
         android:gravity="center_vertical"
         android:paddingLeft="15dip"
         android:textColor="@color/bottom_normal"
-        android:textSize="13sp"
+        android:textSize="14sp"
         android:lineSpacingExtra="3dp"
-        android:maxLines="2"
+        android:maxLines="3"
         android:ellipsize="end"
         tools:text="广州转运中心已发出 下一站 快递员xxx正在派件，请等待 派件电话号码为 18002257156 请耐心等待111"
         android:autoLink="phone"

@@ -86,6 +86,9 @@ public class XRecyclerView extends RecyclerView {
     }
 
     public void addHeaderView(View view) {
+        if(mHeadEmptyView != null){
+            throw new RuntimeException("addHeaderView方法 必须在 addHeaderEmptyView之前调用");
+        }
         sHeaderTypes.add(HEADER_INIT_INDEX + mHeaderViews.size());
         mHeaderViews.add(view);
         if (mWrapAdapter != null) {
@@ -93,6 +96,9 @@ public class XRecyclerView extends RecyclerView {
         }
     }
 
+    /**
+     * 这个方法必须在所有headerview添加之后才调用
+     **/
     public void addHeaderEmptyView(View view){
         if(mHeadEmptyView != null){
             throw new RuntimeException("只能添加一个HeaderEmptyView");
@@ -348,7 +354,16 @@ public class XRecyclerView extends RecyclerView {
                         @Override
                         public void run() {
                             RecyclerView.LayoutParams layoutParams = (LayoutParams) mHeadEmptyView.getLayoutParams();
-                            layoutParams.height = getHeight();
+                            int height_mOtherHeaderViews = 0;
+                            if(mHeaderViews.size()>1){
+                                //表示还有其他的headerview 需要考虑它们的高度
+                                for(View headerview:mHeaderViews){
+                                    if(headerview != mHeadEmptyView){
+                                        height_mOtherHeaderViews +=headerview.getHeight();
+                                    }
+                                }
+                            }
+                            layoutParams.height = getHeight()-height_mOtherHeaderViews;
                             layoutParams.width = getWidth();
                             mHeadEmptyView.setLayoutParams(layoutParams);
                         }
@@ -665,21 +680,14 @@ public class XRecyclerView extends RecyclerView {
         private Paint mPaint;
         private int divHeight;
         private boolean hasHead;
-        private boolean onlyhasHead;
-
-        public DivItemDecoration(Context context,int divHeight, boolean hasHead){
-            this(context,divHeight,hasHead,false);
-        }
 
         /***
          * @param divHeight 分割线高度
-         * @param hasHead 第一项是否去掉分割线
-         * @param onlyhasHead 是否只有第一项才有分割线
+         * @param hasHead 第一项是否去掉分割线 true表示需要 false表示去掉
          */
-        public DivItemDecoration(Context context,int divHeight, boolean hasHead,boolean onlyhasHead){
+        public DivItemDecoration(Context context,int divHeight, boolean hasHead){
             this.divHeight = divHeight;
             this.hasHead = hasHead;
-            this.onlyhasHead = onlyhasHead;
             mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
             mPaint.setColor(context.getResources().getColor(R.color.list_line));
             mPaint.setStyle(Paint.Style.FILL);
@@ -689,17 +697,7 @@ public class XRecyclerView extends RecyclerView {
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
                                    RecyclerView.State state) {
             super.getItemOffsets(outRect, view, parent, state);
-            int position = parent.getChildAdapterPosition(view);
-            if(hasHead && position == 0){
-                return;
-            }
-
-            if(onlyhasHead && position !=0){
-                //只允许第一个有分割线
-                return;
-            }
             outRect.bottom = divHeight;
-            outRect.left = divHeight;
         }
 
         @Override
@@ -710,6 +708,13 @@ public class XRecyclerView extends RecyclerView {
             final int childSize = parent.getChildCount();
             for (int i = 0; i < childSize; i++) {
                 final View child = parent.getChildAt(i);
+                if(child.getVisibility()==GONE){
+                    continue;
+                }
+                int index = parent.getChildAdapterPosition(child);
+                if(!hasHead && index==0){
+                    continue;
+                }
                 RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) child.getLayoutParams();
                 final int top = child.getBottom() + layoutParams.bottomMargin;
                 final int bottom = top + divHeight;

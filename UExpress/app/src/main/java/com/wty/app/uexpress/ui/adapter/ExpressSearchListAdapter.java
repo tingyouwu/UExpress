@@ -68,7 +68,7 @@ public class ExpressSearchListAdapter extends BaseRecyclerViewAdapter<EntityExpr
         holder.getConvertView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ExpressInfoActivity.startActivity((Activity) mContext,item.getExpressnum());
+                ExpressInfoActivity.startActivity((Activity) mContext,item.getCompanycode(),item.getExpressnum());
             }
         });
     }

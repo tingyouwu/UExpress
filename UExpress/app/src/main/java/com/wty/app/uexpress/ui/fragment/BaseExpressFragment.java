@@ -44,11 +44,11 @@ public abstract class BaseExpressFragment extends BaseFragment {
         listview.setLayoutManager(layoutManager);
         listview.setPullRefreshEnabled(true);
         listview.setLoadingMoreEnabled(false);
+        listview.addItemDecoration(new XRecyclerView.DivItemDecoration(activity,2,false));
         listview.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
                 refreshList();
-                listview.refreshComplete("");
             }
 
             @Override
@@ -63,10 +63,15 @@ public abstract class BaseExpressFragment extends BaseFragment {
         ListViewEmptyLayout emptylayout = new ListViewEmptyLayout(getActivity());
         emptylayout.setEmptyText(getString(R.string.express_record_empty),getString(R.string.click_add));
         listview.addHeaderEmptyView(emptylayout);
+        refreshList();
     }
 
     @Override
     public void doWorkOnResume() {
+    }
+
+    @Override
+    public void handleOnShow() {
         refreshList();
     }
 

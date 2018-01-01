@@ -26,6 +26,10 @@
     <string name="select_express_company">选择快递公司</string>
     <string name="searching_wait">正在查找，请稍候...</string>
     <string name="search_result">查询结果</string>
+    <string name="express_detail">快递信息</string>
+    <string name="help_contact">如需帮助请联系</string>
+    <string name="no_result">查无记录</string>
+    <string name="checknum_company">请核对单号与快递公司</string>
 
     <string name="add_remark">添加备注</string>
 

@@ -282,7 +282,8 @@ public class SearchFragment extends BaseFragment {
                         if(EXPRESS_STATUS_SUCESS.equals(response.status)){
                             //保存单号
                             EntityExpressDALEx.saveExpressInfo(json,response);
-                            ExpressInfoActivity.startActivity(activity,postid);
+                            ExpressInfoActivity.startActivity(activity,companycode,postid);
+                            handleOnShow();
                         }else {
                             //订单不存在
                             activity.onToastSelect(new OnDismissCallbackListener("查询无结果，是否保存单号?", SweetAlertDialog.WARNING_TYPE){

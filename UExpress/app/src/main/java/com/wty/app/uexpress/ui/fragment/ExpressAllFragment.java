@@ -29,6 +29,6 @@ public class ExpressAllFragment extends BaseExpressFragment {
 
     @Override
     protected List<EntityExpressDALEx> queryList() {
-        return EntityExpressDALEx.get().queryAllWithDelete();
+        return EntityExpressDALEx.get().queryAllWithoutDelete();
     }
 }
