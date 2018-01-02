@@ -62,6 +62,9 @@ public class EntityExpressDALEx extends SqliteBaseDALEx {
     @DatabaseField(Type = DatabaseField.FieldType.INT)
     //跟踪信息的条数
     private int stepsize;
+    //最新未读跟踪信息条数
+    @DatabaseField(Type = DatabaseField.FieldType.INT)
+    private int unreadsize;
 
     private String companyicon;
     private String companyname;
@@ -120,6 +123,7 @@ public class EntityExpressDALEx extends SqliteBaseDALEx {
         express.setRecstatus(1);
         express.setStatus(entity.status);
         express.setState(entity.state);
+        express.setUnreadsize(0);
         express.setCreatetime(CoreTimeUtils.getNowTime());
         if(entity.data !=null && entity.data.size()!=0){
             express.setSteptime(entity.data.get(0).time);
@@ -129,6 +133,14 @@ public class EntityExpressDALEx extends SqliteBaseDALEx {
             express.setStepsize(0);
         }
         express.saveOrUpdate();
+    }
+
+    public int getUnreadsize() {
+        return unreadsize;
+    }
+
+    public void setUnreadsize(int unreadsize) {
+        this.unreadsize = unreadsize;
     }
 
     public int getStepsize() {

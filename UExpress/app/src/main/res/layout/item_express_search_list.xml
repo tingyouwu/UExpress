@@ -10,8 +10,8 @@
 
     <com.wty.app.uexpress.widget.roundedimageview.RoundedImageView
         android:id="@+id/item_icon"
-        android:layout_width="45dip"
-        android:layout_height="45dp"
+        android:layout_width="40dip"
+        android:layout_height="40dp"
         android:layout_marginRight="10dp"
         android:scaleType="centerCrop"
         android:layout_gravity="center_vertical"
@@ -24,7 +24,6 @@
         android:layout_weight="1"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginRight="10dp"
         android:orientation="vertical">
 
             <TextView
@@ -62,27 +61,11 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/llayout_time"
+    <TextView
+        android:id="@+id/item_check_time"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="right"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        tools:text="12-21"/>
 
-        <TextView
-            android:id="@+id/item_check_time"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:textSize="10sp"
-            tools:text="12-21"/>
-
-        <com.wty.app.uexpress.widget.common.UnreadView
-            android:id="@+id/item_notice"
-            app:count="99"
-            app:unread="100"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:src="@drawable/circle_red"/>
-    </LinearLayout>
 </LinearLayout>

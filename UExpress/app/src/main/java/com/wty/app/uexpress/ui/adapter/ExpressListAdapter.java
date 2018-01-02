@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.wty.app.uexpress.R;
@@ -13,11 +14,10 @@ import com.wty.app.uexpress.ui.activity.ExpressInfoActivity;
 import com.wty.app.uexpress.util.AppImageLoader;
 import com.wty.app.uexpress.util.CoreImageURLUtils;
 import com.wty.app.uexpress.util.CoreTimeUtils;
+import com.wty.app.uexpress.widget.common.UnreadView;
 import com.wty.app.uexpress.widget.roundedimageview.RoundedImageView;
 import com.wty.app.uexpress.widget.xrecyclerview.adapter.BaseRecyclerViewAdapter;
 import com.wty.app.uexpress.widget.xrecyclerview.adapter.BaseRecyclerViewHolder;
-import com.zyyoona7.lib.EasyPopup;
-
 import java.util.List;
 
 import static com.wty.app.uexpress.base.UExpressConstant.EXPRESS_STATUS_SUCESS;
@@ -39,6 +39,15 @@ public class ExpressListAdapter extends BaseRecyclerViewAdapter<EntityExpressDAL
         TextView itemRemark = holder.getView(R.id.item_remark);
         TextView itemStep = holder.getView(R.id.item_step);
         TextView itemCheckTime = holder.getView(R.id.item_check_time);
+        UnreadView unreadView = holder.getView(R.id.item_notice);
+        LinearLayout llayout = holder.getView(R.id.llayout_time);
+
+        if(item.getUnreadsize()!=0){
+            unreadView.setVisibility(View.GONE);
+        }else {
+            unreadView.setVisibility(View.VISIBLE);
+            unreadView.setUnread(item.getUnreadsize());
+        }
 
         if(!TextUtils.isEmpty(item.getCompanyicon())){
             AppImageLoader.displayImage(mContext, CoreImageURLUtils.ImageScheme.HEADIMG.wrap(item.getCompanyicon()),itemIcon);
@@ -54,13 +63,13 @@ public class ExpressListAdapter extends BaseRecyclerViewAdapter<EntityExpressDAL
                     itemRemark.setText(item.getRemark());
                 }
                 itemStep.setVisibility(View.VISIBLE);
-                itemCheckTime.setVisibility(View.VISIBLE);
+                llayout.setVisibility(View.VISIBLE);
                 itemCheckTime.setText(CoreTimeUtils.dateToMMdd(item.getSteptime()));
                 itemStep.setText(item.getStepcontext());
                 break;
             default:
                 itemStep.setVisibility(View.GONE);
-                itemCheckTime.setVisibility(View.GONE);
+                llayout.setVisibility(View.GONE);
                 itemRemark.setVisibility(View.GONE);
                 break;
         }

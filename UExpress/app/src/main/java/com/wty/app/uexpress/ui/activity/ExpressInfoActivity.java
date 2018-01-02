@@ -189,6 +189,7 @@ public class ExpressInfoActivity extends BaseActivity {
                                 express.setLastjson(json);
                                 express.setStatus(entity.status);
                                 express.setState(entity.state);
+                                express.setUnreadsize(0);
                                 express.setSteptime(response.data.get(0).time);
                                 express.setStepcontext(response.data.get(0).context);
                                 express.setStepsize(response.data.size());

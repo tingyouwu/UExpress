@@ -28,7 +28,7 @@ import static com.wty.app.uexpress.base.UExpressConstant.EXPRESS_STATUS_SUCESS;
 public class ExpressSearchListAdapter extends BaseRecyclerViewAdapter<EntityExpressDALEx> {
 
     public ExpressSearchListAdapter(Context context, List<EntityExpressDALEx> list) {
-        super(context, R.layout.item_express_list, list);
+        super(context, R.layout.item_express_search_list, list);
     }
 
     @Override

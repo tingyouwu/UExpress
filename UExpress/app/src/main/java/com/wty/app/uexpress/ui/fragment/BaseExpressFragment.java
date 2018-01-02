@@ -130,7 +130,7 @@ public abstract class BaseExpressFragment extends BaseFragment {
         });
 
         ListViewEmptyLayout emptylayout = new ListViewEmptyLayout(getActivity());
-        emptylayout.setEmptyText(getString(R.string.express_record_empty),getString(R.string.click_add));
+        emptylayout.setEmptyText(emptytext_up,emptytext_down);
         listview.addHeaderEmptyView(emptylayout);
         refreshLocalList();
     }

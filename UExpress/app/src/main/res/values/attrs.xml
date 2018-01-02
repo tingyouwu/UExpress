@@ -26,6 +26,10 @@
         <attr name="pivotY" format="fraction" />
     </declare-styleable>
 
+    <declare-styleable name="UnreadView">
+        <attr name="unread" format="integer" />
+        <attr name="count" format="integer" />
+    </declare-styleable>
 
     <!--xrecyclerview-->
     <declare-styleable name="AVLoadingIndicatorView">

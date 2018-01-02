@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <!-- 填充的颜色 -->
+
+
+    <size
+        android:width="10dp"
+        android:height="10dp"/>
+
+    <solid android:color="#E51C23" />
+    <!--&lt;!&ndash; 设置矩形的四个角为弧形 &ndash;&gt;-->
+    <!--&lt;!&ndash; android:radius 弧形的半径 &ndash;&gt;-->
+    <!--<corners android:radius="3dip" />-->
+
+</shape>
