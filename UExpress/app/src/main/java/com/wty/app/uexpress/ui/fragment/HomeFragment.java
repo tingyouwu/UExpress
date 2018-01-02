@@ -53,10 +53,6 @@ public class HomeFragment extends BaseFragment {
                         if (tag.equals(fragmentTag)) {
                             viewpager.setCurrentItem(index);
                             tablayout.getTabAt(index).select();
-                            //需要刷新全部列表
-                            fragments.get(ExpressAllFragment.TAG).handleOnShow();
-                            //刷新当前页面
-                            fragments.get(fragmentTag).handleOnShow();
                             break;
                         }
                         index++;

@@ -16,6 +16,7 @@ import com.wty.app.uexpress.util.CoreTimeUtils;
 import com.wty.app.uexpress.widget.roundedimageview.RoundedImageView;
 import com.wty.app.uexpress.widget.xrecyclerview.adapter.BaseRecyclerViewAdapter;
 import com.wty.app.uexpress.widget.xrecyclerview.adapter.BaseRecyclerViewHolder;
+import com.zyyoona7.lib.EasyPopup;
 
 import java.util.List;
 
@@ -69,6 +70,15 @@ public class ExpressListAdapter extends BaseRecyclerViewAdapter<EntityExpressDAL
             @Override
             public void onClick(View v) {
                 ExpressInfoActivity.startActivity((Activity) mContext,item.getCompanycode(),item.getExpressnum());
+            }
+        });
+        holder.getConvertView().setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if(onItemLongClickLitener != null){
+                    onItemLongClickLitener.onItemLongClick(v,item);
+                }
+                return true;
             }
         });
     }

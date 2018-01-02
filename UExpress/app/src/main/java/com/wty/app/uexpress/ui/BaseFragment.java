@@ -64,6 +64,7 @@ public abstract class BaseFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
+		Log.d("性能调试", this.getClass().getSimpleName() + " onResume");
 		if(getUserVisibleHint()){
 			onInitData();
 			doWorkOnResume();

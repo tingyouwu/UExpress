@@ -112,7 +112,7 @@ public class ExpressInfoActivity extends BaseActivity {
         refreshHeaderLayout(express);
         refreshEmptyLayout(express);
         refreshList(express);
-        listview.refresh();
+        loadExpressDetail();
     }
 
     private void handleIntent(){

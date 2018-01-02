@@ -2,6 +2,7 @@ package com.wty.app.uexpress.ui.fragment;
 
 import android.os.AsyncTask;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.View;
 
 import com.wty.app.uexpress.R;
 import com.wty.app.uexpress.db.entity.EntityExpressDALEx;
@@ -11,6 +12,10 @@ import com.wty.app.uexpress.ui.adapter.ExpressListAdapter;
 import com.wty.app.uexpress.util.CoreTimeUtils;
 import com.wty.app.uexpress.widget.common.ListViewEmptyLayout;
 import com.wty.app.uexpress.widget.xrecyclerview.XRecyclerView;
+import com.wty.app.uexpress.widget.xrecyclerview.adapter.BaseRecyclerViewAdapter;
+import com.zyyoona7.lib.EasyPopup;
+import com.zyyoona7.lib.HorizontalGravity;
+import com.zyyoona7.lib.VerticalGravity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +53,7 @@ public abstract class BaseExpressFragment extends BaseFragment {
         listview.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
-                refreshList();
+                refreshServiceList();
             }
 
             @Override
@@ -59,20 +64,80 @@ public abstract class BaseExpressFragment extends BaseFragment {
         List<EntityExpressDALEx> data = new ArrayList<>();
         adapter = new ExpressListAdapter(getActivity(),data);
         listview.setAdapter(adapter);
+        adapter.setOnItemLongClickLitener(new BaseRecyclerViewAdapter.OnItemLongClickLitener<EntityExpressDALEx>() {
+            @Override
+            public void onItemLongClick(View view, final EntityExpressDALEx item) {
+                if(item.getRecstatus()==1){
+                    //启用状态
+                    final EasyPopup popup = new EasyPopup(activity)
+                            .setContentView(R.layout.layout_express_menu)
+                            .setFocusAndOutsideEnable(true)
+                            .createPopup();
+                    popup.getView(R.id.tv_top).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            popup.dismiss();
+                            item.setCreatetime(CoreTimeUtils.getNowTime());
+                            item.saveOrUpdate();
+                            refreshLocalList();
+                        }
+                    });
+                    popup.getView(R.id.tv_delete).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            popup.dismiss();
+                            item.setRecstatus(0);
+                            item.saveOrUpdate();
+                            refreshLocalList();
+                        }
+                    });
+                    popup.showAtAnchorView(view, VerticalGravity.ABOVE, HorizontalGravity.CENTER, 0, 0);
+                }else {
+                    //删除状态  置顶 恢复 彻底删除
+                    final EasyPopup popup = new EasyPopup(activity)
+                            .setContentView(R.layout.layout_express_menu2)
+                            .setFocusAndOutsideEnable(true)
+                            .createPopup();
+                    popup.getView(R.id.tv_top).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            popup.dismiss();
+                            item.setCreatetime(CoreTimeUtils.getNowTime());
+                            item.saveOrUpdate();
+                            refreshLocalList();
+                        }
+                    });
+                    popup.getView(R.id.tv_delete).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            popup.dismiss();
+                            item.deleteById(item.getExpressid());
+                            refreshLocalList();
+                        }
+                    });
+                    popup.getView(R.id.tv_restore).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            popup.dismiss();
+                            item.setRecstatus(1);
+                            item.saveOrUpdate();
+                            refreshLocalList();
+                        }
+                    });
+                    popup.showAtAnchorView(view, VerticalGravity.ABOVE, HorizontalGravity.CENTER, 0, 0);
+                }
+            }
+        });
 
         ListViewEmptyLayout emptylayout = new ListViewEmptyLayout(getActivity());
         emptylayout.setEmptyText(getString(R.string.express_record_empty),getString(R.string.click_add));
         listview.addHeaderEmptyView(emptylayout);
-        refreshList();
+        refreshLocalList();
     }
 
     @Override
     public void doWorkOnResume() {
-    }
-
-    @Override
-    public void handleOnShow() {
-        refreshList();
+        refreshLocalList();
     }
 
     @Override
@@ -84,9 +149,32 @@ public abstract class BaseExpressFragment extends BaseFragment {
     }
 
     /**
-     * 刷新列表
+     * 刷新本地列表
      **/
-    private void refreshList(){
+    private void refreshLocalList(){
+        if(refreshtask != null && refreshtask.getStatus() == AsyncTask.Status.RUNNING){
+            return;
+        }
+        refreshtask = new SimpleTask() {
+            @Override
+            protected Object doInBackground(String... params) {
+                return queryList();
+            }
+
+            @Override
+            protected void onPostExecute(Object o) {
+                listview.refreshComplete(CoreTimeUtils.getNowTime());
+                List<EntityExpressDALEx> result = (List<EntityExpressDALEx>) o;
+                adapter.refreshList(result);
+            }
+        };
+        refreshtask.startTask();
+    }
+
+    /**
+     * 获取最新服务列表
+     **/
+    private void refreshServiceList(){
         if(refreshtask != null && refreshtask.getStatus() == AsyncTask.Status.RUNNING){
             return;
         }
