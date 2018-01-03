@@ -15,8 +15,8 @@
 
         <com.wty.app.uexpress.widget.roundedimageview.RoundedImageView
             android:id="@+id/item_icon"
-            android:layout_width="40dip"
-            android:layout_height="40dp"
+            android:layout_width="45dip"
+            android:layout_height="45dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:scaleType="centerCrop"
@@ -45,7 +45,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:maxWidth="200dip"
                 android:hint="@string/add_remark"
                 android:singleLine="true"
                 android:textColor="@color/gray_font_3"

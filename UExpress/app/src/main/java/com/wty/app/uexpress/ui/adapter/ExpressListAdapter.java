@@ -1,6 +1,5 @@
 package com.wty.app.uexpress.ui.adapter;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
@@ -42,7 +41,7 @@ public class ExpressListAdapter extends BaseRecyclerViewAdapter<EntityExpressDAL
         UnreadView unreadView = holder.getView(R.id.item_notice);
         LinearLayout llayout = holder.getView(R.id.llayout_time);
 
-        if(item.getUnreadsize()!=0){
+        if(item.getUnreadsize()==0){
             unreadView.setVisibility(View.GONE);
         }else {
             unreadView.setVisibility(View.VISIBLE);
@@ -57,24 +56,25 @@ public class ExpressListAdapter extends BaseRecyclerViewAdapter<EntityExpressDAL
 
         switch (item.getStatus()){
             case EXPRESS_STATUS_SUCESS:
-                if(TextUtils.isEmpty(item.getRemark())){
-                    itemRemark.setVisibility(View.GONE);
-                }else {
-                    itemRemark.setText(item.getRemark());
-                }
                 itemStep.setVisibility(View.VISIBLE);
                 llayout.setVisibility(View.VISIBLE);
-                itemCheckTime.setText(CoreTimeUtils.dateToMMdd(item.getSteptime()));
-                itemStep.setText(item.getStepcontext());
+                itemCheckTime.setText(CoreTimeUtils.dateToMMdd(item.getLaststeptime()));
+                itemStep.setText(item.getLaststepcontext());
                 break;
             default:
                 itemStep.setVisibility(View.GONE);
                 llayout.setVisibility(View.GONE);
-                itemRemark.setVisibility(View.GONE);
                 break;
         }
 
-        itemName.setText(item.getCompanyname()+" "+item.getExpressnum());
+        if(TextUtils.isEmpty(item.getRemark())){
+            itemRemark.setVisibility(View.GONE);
+            itemName.setText(item.getCompanyname()+" "+item.getExpressnum());
+        }else {
+            itemRemark.setVisibility(View.VISIBLE);
+            itemName.setText(item.getRemark());
+            itemRemark.setText(item.getCompanyname()+" "+item.getExpressnum());
+        }
         holder.getConvertView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,5 +91,4 @@ public class ExpressListAdapter extends BaseRecyclerViewAdapter<EntityExpressDAL
             }
         });
     }
-
 }

@@ -36,12 +36,6 @@ public class ExpressInfoHeaderLayout extends LinearLayout {
 		item_name = (TextView)findViewById(R.id.item_name);
 		item_remark = (TextView)findViewById(R.id.item_remark);
 		item_icon = (RoundedImageView)findViewById(R.id.item_icon);
-		setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-			}
-		});
 	}
 
 	public void setIcon(String url){

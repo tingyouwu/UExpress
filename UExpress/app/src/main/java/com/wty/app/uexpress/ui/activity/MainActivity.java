@@ -85,6 +85,9 @@ public class MainActivity extends BaseActivity {
                 public void onReceive(Context context, Intent intent) {
                     String fragmentTag = intent.getStringExtra(UExpressConstant.TAG_FRAGMENT);
                     HomeTab homeTab = homeTabMap.get(fragmentTag);
+                    if(lastTab == homeTab){
+                        return;
+                    }
                     handleChangeTab(homeTab);
                 }
             };

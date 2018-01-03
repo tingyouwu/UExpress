@@ -1,7 +1,6 @@
 package com.wty.app.uexpress.ui.fragment;
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -26,11 +25,6 @@ public class ExpressAllFragment extends BaseExpressFragment {
         emptytext_up = getString(R.string.express_record_empty);
         emptytext_down = getString(R.string.click_add);
         return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
     }
 
     @Override

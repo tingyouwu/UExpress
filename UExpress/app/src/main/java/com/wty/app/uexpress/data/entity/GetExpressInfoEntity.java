@@ -30,6 +30,7 @@ public class GetExpressInfoEntity extends BaseResponseEntity {
     public String com;
     //物流单号
     public String nu;
+    public String remark;
 
     @Override
     protected String createArgs(Object... params) {

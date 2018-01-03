@@ -1,6 +1,7 @@
 package com.wty.app.uexpress.db.entity;
 
 import android.database.Cursor;
+import android.text.TextUtils;
 
 import com.wty.app.uexpress.data.entity.GetExpressInfoEntity;
 import com.wty.app.uexpress.db.SqliteBaseDALEx;
@@ -37,10 +38,15 @@ public class EntityExpressDALEx extends SqliteBaseDALEx {
     private String createtime;
     @DatabaseField(Type = DatabaseField.FieldType.VARCHAR)
     //最新跟踪信息时间
-    private String steptime;
+    private String laststeptime;
     @DatabaseField(Type = DatabaseField.FieldType.VARCHAR)
     //最新跟踪信息
-    private String stepcontext;
+    private String laststepcontext;
+    //第一条跟踪信息时间
+    private String firststeptime;
+    @DatabaseField(Type = DatabaseField.FieldType.VARCHAR)
+    //第一条跟踪信息
+    private String firststepcontext;
     @DatabaseField(Type = DatabaseField.FieldType.VARCHAR)
     //物流信息查找状态  暂无结果  "201"   查询成功  "200"
     private String status;
@@ -114,24 +120,64 @@ public class EntityExpressDALEx extends SqliteBaseDALEx {
         return findList(sql);
     }
 
+    /**
+     * 更新原数据
+     **/
+    public static void updateExpressInfo(String json,GetExpressInfoEntity entity){
+        EntityExpressDALEx express = EntityExpressDALEx.get().findById(entity.com+entity.nu);
+        if(entity.data !=null && entity.data.size()!=0){
+            express.setLastjson(json);
+            express.setStatus(entity.status);
+            express.setState(entity.state);
+            express.setLaststeptime(entity.data.get(0).time);
+            express.setLaststepcontext(entity.data.get(0).context);
+            express.setFirststeptime(entity.data.get(entity.data.size()-1).time);
+            express.setFirststepcontext(entity.data.get(entity.data.size()-1).context);
+            //信息更新数量
+            express.setUnreadsize(Math.abs(entity.data.size()-express.getStepsize()));
+            express.setStepsize(entity.data.size());
+        }else if(express.getStepsize()!=0){
+            //原来的数据是有跟踪信息的 后面查询不到了 那就不需要改变
+        }else {
+            express.setLastjson(json);
+            express.setStatus(entity.status);
+            express.setState(entity.state);
+            express.setUnreadsize(0);
+            express.setStepsize(0);
+        }
+        if(!TextUtils.isEmpty(entity.remark)){
+            express.setRemark(entity.remark);
+        }
+        express.setCreatetime(CoreTimeUtils.getNowTime());
+        express.saveOrUpdate();
+    }
+
+    /**
+     * 插入一条新数据
+     **/
     public static void saveExpressInfo(String json,GetExpressInfoEntity entity){
         EntityExpressDALEx express = new EntityExpressDALEx();
         express.setExpressid(entity.com+entity.nu);
         express.setCompanycode(entity.com);
         express.setExpressnum(entity.nu);
-        express.setLastjson(json);
-        express.setRecstatus(1);
-        express.setStatus(entity.status);
-        express.setState(entity.state);
         express.setUnreadsize(0);
-        express.setCreatetime(CoreTimeUtils.getNowTime());
+        express.setRecstatus(1);
         if(entity.data !=null && entity.data.size()!=0){
-            express.setSteptime(entity.data.get(0).time);
-            express.setStepcontext(entity.data.get(0).context);
+            express.setLaststeptime(entity.data.get(0).time);
+            express.setLaststepcontext(entity.data.get(0).context);
+            express.setFirststeptime(entity.data.get(entity.data.size()-1).time);
+            express.setFirststepcontext(entity.data.get(entity.data.size()-1).context);
             express.setStepsize(entity.data.size());
         }else {
-            express.setStepsize(0);
+                express.setStepsize(0);
         }
+        express.setLastjson(json);
+        express.setStatus(entity.status);
+        express.setState(entity.state);
+        if(!TextUtils.isEmpty(entity.remark)){
+            express.setRemark(entity.remark);
+        }
+        express.setCreatetime(CoreTimeUtils.getNowTime());
         express.saveOrUpdate();
     }
 
@@ -239,20 +285,36 @@ public class EntityExpressDALEx extends SqliteBaseDALEx {
         this.companyname = companyname;
     }
 
-    public String getSteptime() {
-        return steptime;
+    public String getLaststeptime() {
+        return laststeptime;
     }
 
-    public void setSteptime(String steptime) {
-        this.steptime = steptime;
+    public void setLaststeptime(String laststeptime) {
+        this.laststeptime = laststeptime;
     }
 
-    public String getStepcontext() {
-        return stepcontext;
+    public String getLaststepcontext() {
+        return laststepcontext;
     }
 
-    public void setStepcontext(String stepcontext) {
-        this.stepcontext = stepcontext;
+    public void setLaststepcontext(String laststepcontext) {
+        this.laststepcontext = laststepcontext;
+    }
+
+    public String getFirststeptime() {
+        return firststeptime;
+    }
+
+    public void setFirststeptime(String firststeptime) {
+        this.firststeptime = firststeptime;
+    }
+
+    public String getFirststepcontext() {
+        return firststepcontext;
+    }
+
+    public void setFirststepcontext(String firststepcontext) {
+        this.firststepcontext = firststepcontext;
     }
 
     @Override

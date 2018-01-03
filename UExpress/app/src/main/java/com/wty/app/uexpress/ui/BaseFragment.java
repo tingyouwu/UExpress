@@ -1,5 +1,6 @@
 package com.wty.app.uexpress.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,14 +25,6 @@ public abstract class BaseFragment extends Fragment {
 	private Unbinder unbinder;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		if (activity == null) {
-			activity =  (BaseActivity) getActivity();
-		}
-	}
-
-	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		Log.d("性能调试", this.getClass().getSimpleName() + " onCreateView");
 		if (rootView == null) {
@@ -42,6 +35,11 @@ public abstract class BaseFragment extends Fragment {
 		return rootView;
 	}
 
+	@Override
+	public void onAttach(Context context) {
+		super.onAttach(context);
+		activity = (BaseActivity) context;
+	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {

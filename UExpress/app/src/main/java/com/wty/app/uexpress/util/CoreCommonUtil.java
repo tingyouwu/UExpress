@@ -25,6 +25,8 @@ import java.util.UUID;
 
 import rx.functions.Action1;
 
+import static android.view.inputmethod.InputMethodManager.SHOW_FORCED;
+
 @SuppressLint({ "SimpleDateFormat", "NewApi" })
 public class CoreCommonUtil {
 
@@ -211,13 +213,15 @@ public class CoreCommonUtil {
 	 * @param editText
      */
 	public static void keyboardControl(Context context,boolean show,View editText){
-		InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+		InputMethodManager imm = (InputMethodManager)context.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 		if(show){
 			//显示键盘
 			imm.showSoftInput(editText, 0);
 		}else{
 			//隐藏键盘
-			imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+			if(imm.isActive()){
+				imm.hideSoftInputFromWindow(editText.getApplicationWindowToken(), 0);
+			}
 		}
 	}
 }

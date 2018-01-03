@@ -1,9 +1,17 @@
 package com.wty.app.uexpress.ui.activity;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.wty.app.uexpress.R;
@@ -15,7 +23,9 @@ import com.wty.app.uexpress.db.entity.EntityExpressDALEx;
 import com.wty.app.uexpress.task.SimpleTask;
 import com.wty.app.uexpress.ui.BaseActivity;
 import com.wty.app.uexpress.ui.adapter.ExpressInfoListAdapter;
+import com.wty.app.uexpress.util.CoreCommonUtil;
 import com.wty.app.uexpress.util.CoreTimeUtils;
+import com.wty.app.uexpress.widget.common.ClearEditText;
 import com.wty.app.uexpress.widget.common.ExpressInfoEmptyLayout;
 import com.wty.app.uexpress.widget.common.ExpressInfoHeaderLayout;
 import com.wty.app.uexpress.widget.xrecyclerview.XRecyclerView;
@@ -82,7 +92,14 @@ public class ExpressInfoActivity extends BaseActivity {
     @Override
     protected void initView(){
         handleIntent();
-        getDefaultNavigation().setTitle(getString(R.string.express_detail));
+        express = EntityExpressDALEx.get().findById(companycode+postid);
+        getDefaultNavigation().setTitle(getString(R.string.express_detail))
+                .setRightButton(R.mipmap.img_edit, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showRemarkDialog(express.getRemark());
+                    }
+                });
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         listview.setLayoutManager(layoutManager);
@@ -108,7 +125,6 @@ public class ExpressInfoActivity extends BaseActivity {
         listview.addHeaderEmptyView(emptyLayout);
         listview.setAdapter(adapter);
 
-        express = EntityExpressDALEx.get().findById(companycode+postid);
         refreshHeaderLayout(express);
         refreshEmptyLayout(express);
         refreshList(express);
@@ -125,8 +141,13 @@ public class ExpressInfoActivity extends BaseActivity {
      **/
     private void refreshHeaderLayout(EntityExpressDALEx express){
         headerLayout.setIcon(express.getCompanyicon());
-        headerLayout.setName(express.getCompanyname());
-        headerLayout.setRemark(express.getRemark());
+        if(!TextUtils.isEmpty(express.getRemark())){
+            headerLayout.setName(express.getRemark());
+            headerLayout.setRemark(express.getCompanyname()+" "+express.getExpressnum());
+        }else {
+            headerLayout.setName(express.getCompanyname()+" "+express.getExpressnum());
+            headerLayout.setRemark(express.getRemark());
+        }
     }
 
     /**
@@ -187,16 +208,21 @@ public class ExpressInfoActivity extends BaseActivity {
                             if(response.data !=null && response.data.size()!= 0 && response.data.size()>express.getStepsize()){
                                 Toast.makeText(ExpressInfoActivity.this,String.format(Locale.US,"查询结束，%d条更新!",response.data.size()-express.getStepsize()),Toast.LENGTH_LONG).show();
                                 express.setLastjson(json);
-                                express.setStatus(entity.status);
-                                express.setState(entity.state);
+                                express.setStatus(response.status);
+                                express.setState(response.state);
                                 express.setUnreadsize(0);
-                                express.setSteptime(response.data.get(0).time);
-                                express.setStepcontext(response.data.get(0).context);
+                                express.setLaststeptime(response.data.get(0).time);
+                                express.setLaststepcontext(response.data.get(0).context);
+                                express.setFirststeptime(response.data.get(response.data.size()-1).time);
+                                express.setFirststepcontext(response.data.get(response.data.size()-1).context);
                                 express.setStepsize(response.data.size());
                                 express.saveOrUpdate();
                                 refreshList(express);
                             }else {
                                 Toast.makeText(ExpressInfoActivity.this,String.format(Locale.US,"查询结束，%d条更新!",0),Toast.LENGTH_SHORT).show();
+                                //更新未读条数
+                                express.setUnreadsize(0);
+                                express.saveOrUpdate();
                             }
                         }
                     }
@@ -209,5 +235,58 @@ public class ExpressInfoActivity extends BaseActivity {
             }
         };
         task.startTask();
+    }
+
+    /**
+     * 显示备注页面
+     **/
+    private void showRemarkDialog(String remark){
+        // 以下代码实现动态加载xml布局文件
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View  contentview = inflater.inflate(R.layout.layout_remark_edit,null);
+        final ClearEditText et_remark = (ClearEditText) contentview.findViewById(R.id.et_remark);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        if(TextUtils.isEmpty(remark)){
+            builder.setTitle(getResources().getString(R.string.add_remark));
+        }else {
+            et_remark.setText(remark);
+            et_remark.setSelection(remark.length());
+            builder.setTitle(getResources().getString(R.string.edit_remark));
+        }
+
+        builder.setView(contentview);
+        ////禁止点击 dialog 外部取消弹窗
+        builder.setCancelable(false);
+        builder.setPositiveButton(getResources().getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                express.setRemark(et_remark.getText().toString());
+                express.saveOrUpdate();
+                refreshHeaderLayout(express);
+                et_remark.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        CoreCommonUtil.keyboardControl(ExpressInfoActivity.this,false,et_remark);
+                    }
+                });
+            }
+        });
+        builder.setNegativeButton(getResources().getString(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.show();
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.parseColor("#176ce3"));
+        dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#F27474"));
+        et_remark.post(new Runnable() {
+            @Override
+            public void run() {
+                et_remark.requestFocus();
+                CoreCommonUtil.keyboardControl(ExpressInfoActivity.this,true,et_remark);
+            }
+        });
     }
 }

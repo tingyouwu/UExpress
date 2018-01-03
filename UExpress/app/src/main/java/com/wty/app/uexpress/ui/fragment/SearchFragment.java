@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.wty.app.uexpress.R;
-import com.wty.app.uexpress.base.BroadcastConstants;
+import com.wty.app.uexpress.base.FragmentObserver;
 import com.wty.app.uexpress.data.entity.BaseResponseEntity;
 import com.wty.app.uexpress.data.entity.GetCompanyByExpressNumEntity;
 import com.wty.app.uexpress.data.model.CompanyModel;
@@ -35,7 +35,6 @@ import butterknife.OnClick;
 import io.github.xudaojie.qrcodelib.CaptureActivity;
 
 import static com.wty.app.uexpress.base.UExpressConstant.EXPRESS_STATUS_SUCESS;
-import static com.wty.app.uexpress.base.UExpressConstant.TAG_FRAGMENT;
 
 /**
  * @author wty
@@ -85,11 +84,8 @@ public class SearchFragment extends BaseFragment {
     @Override
     public void handleOnShow() {
         etExpressnum.setText("");
-        tvLabelNum.setVisibility(View.GONE);
-        tvCompany.setText("");
         companycode = "";
-        handleCompanyLayout("");
-        handleConfirmButton();
+        handleExpressLayout("");
     }
 
     @Override
@@ -114,10 +110,9 @@ public class SearchFragment extends BaseFragment {
                     tvLabelNum.setVisibility(View.VISIBLE);
                 } else {
                     tvLabelNum.setVisibility(View.GONE);
-                    handleCompanyLayout("");
-                    handleConfirmButton();
+                    handleExpressLayout("");
                 }
-                if (s.length() >= 8) {
+                if (s.length() >= 5) {
                     //开始请求网络 查找公司
                     countDowntimer.cancel();
                     countDowntimer.start();
@@ -132,6 +127,8 @@ public class SearchFragment extends BaseFragment {
         activity.getDefaultNavigation().setTitle(getString(R.string.search_express))
                 .getLeftButton()
                 .hide();
+
+        activity.getDefaultNavigation().getRightButton().hide();
     }
 
     @OnClick({R.id.img_scan, R.id.img_next,R.id.img_delete,R.id.tv_company,R.id.btn_confirm})
@@ -161,8 +158,7 @@ public class SearchFragment extends BaseFragment {
                     public void onResult(Intent data) {
                         CompanyModel companyModel = (CompanyModel) data.getSerializableExtra(ExpressCompanySelectActivity.TAG_RESULT);
                         companycode = companyModel.getCode();
-                        handleCompanyLayout(companyModel.getName());
-                        handleConfirmButton();
+                        handleExpressLayout(companyModel.getName());
                     }
                 });
                 break;
@@ -211,24 +207,23 @@ public class SearchFragment extends BaseFragment {
                             EntityCompanyDALEx company = EntityCompanyDALEx.get().findById(entity.auto.get(0).comCode);
                             if(company != null){
                                 companycode = company.getCode();
-                                handleCompanyLayout(company.getName());
-                                handleConfirmButton();
-                            }else {
-                                companycode = "";
-                                handleCompanyLayout("");
-                                handleConfirmButton();
+                                handleExpressLayout(company.getName());
+                                return;
                             }
-                        }else {
-                            companycode = "";
-                            handleCompanyLayout("");
-                            handleConfirmButton();
                         }
+                        companycode = "";
+                        handleExpressLayout("");
                     }
                 }
             };
             task.startTask();
         }
     };
+
+    private void handleExpressLayout(String content){
+        handleCompanyLayout(content);
+        handleConfirmButton();
+    }
 
     /**
      * 处理一下选择公司布局的显示效果
@@ -281,27 +276,35 @@ public class SearchFragment extends BaseFragment {
                     public void onSuccess(final String json, final GetExpressInfoEntity response) {
                         if(EXPRESS_STATUS_SUCESS.equals(response.status)){
                             //保存单号
-                            EntityExpressDALEx.saveExpressInfo(json,response);
+                            if(EntityExpressDALEx.get().isExist(response.com+response.nu)){
+                                EntityExpressDALEx.updateExpressInfo(json,response);
+                            }else {
+                                EntityExpressDALEx.saveExpressInfo(json,response);
+                            }
                             ExpressInfoActivity.startActivity(activity,companycode,postid);
                             handleOnShow();
                         }else {
                             //订单不存在
-                            activity.onToastSelect(new OnDismissCallbackListener("查询无结果，是否保存单号?", SweetAlertDialog.WARNING_TYPE){
+                            setDimissAskCallback(new OnDismissCallbackListener("查询无结果，是否保存单号?", SweetAlertDialog.WARNING_TYPE){
                                 @Override
                                 public void onCallback() {
                                     //保存单号
                                     response.com = companycode;
                                     response.nu = postid;
-                                    EntityExpressDALEx.saveExpressInfo(json,response);
+                                    if(EntityExpressDALEx.get().isExist(response.com+response.nu)){
+                                        EntityExpressDALEx.updateExpressInfo(json,response);
+                                    }else {
+                                        EntityExpressDALEx.saveExpressInfo(json,response);
+                                    }
 
-                                    //切回到首页
-                                    Intent intentForHome = new Intent(BroadcastConstants.CHANGE_HOME_TAB);
-                                    intentForHome.putExtra(TAG_FRAGMENT,HomeFragment.TAG);
-                                    activity.sendBroadcast(intentForHome);
-                                    //同时切回到首页的未签收
-                                    Intent intentForUncheck = new Intent(BroadcastConstants.CHANGE_FRAGMENT_TAB);
-                                    intentForUncheck.putExtra(TAG_FRAGMENT,ExpressUnCheckFragment.TAG);
-                                    activity.sendBroadcast(intentForUncheck);
+                                    EntityExpressDALEx expressDALEx = EntityExpressDALEx.get().findById(response.com+response.nu);
+                                    if(expressDALEx.getRecstatus()==0){
+                                        FragmentObserver.goToHomeDeletePage(activity);
+                                    }else if("3".equals(expressDALEx.getState())){
+                                        FragmentObserver.goToHomeCheckPage(activity);
+                                    }else {
+                                        FragmentObserver.goToHomeUnCheckPage(activity);
+                                    }
                                 }
                             });
                         }

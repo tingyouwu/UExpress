@@ -24,7 +24,10 @@ import butterknife.BindView;
 
 /**
  * @author wty
- *         全部
+ *  快递列表基类fragment
+ *  刷新数据分两种
+ *  1.初次进来获取本地数据列表 并调用服务获取最近更新的快递信息
+ *  2.下拉刷新调用服务获取最近更新的快递信息 并且更新本地数据表
  */
 public abstract class BaseExpressFragment extends BaseFragment {
 
@@ -169,6 +172,11 @@ public abstract class BaseExpressFragment extends BaseFragment {
             }
         };
         refreshtask.startTask();
+    }
+
+    @Override
+    public void handleOnShow() {
+        refreshLocalList();
     }
 
     /**

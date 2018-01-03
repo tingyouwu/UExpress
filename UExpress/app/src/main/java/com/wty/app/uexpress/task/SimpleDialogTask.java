@@ -11,6 +11,7 @@ public abstract class SimpleDialogTask extends SimpleTask{
     BaseActivity context;
     String loadingMessage;
     OnDismissCallbackListener dismissCallback;
+    OnDismissCallbackListener dismissAskCallback;
 
     public SimpleDialogTask(BaseActivity context){
         this.context = context;
@@ -40,7 +41,9 @@ public abstract class SimpleDialogTask extends SimpleTask{
     @Override
     protected void onPostExecute(Object obj) {
         onResult(obj);
-        if(dismissCallback!=null){
+        if(dismissAskCallback != null){
+            context.dismissAskLoading(dismissAskCallback);
+        }else if(dismissCallback!=null){
             context.dismissLoading(dismissCallback);
         }else{
             context.dismissLoading();
@@ -49,6 +52,10 @@ public abstract class SimpleDialogTask extends SimpleTask{
 
     public void setDismissCallback(String msg,int type){
         this.dismissCallback = new OnDismissCallbackListener(msg, type);
+    }
+
+    public void setDimissAskCallback(OnDismissCallbackListener dismissCallback){
+        this.dismissAskCallback = dismissCallback;
     }
 
     public void setDismissCallback(String msg){

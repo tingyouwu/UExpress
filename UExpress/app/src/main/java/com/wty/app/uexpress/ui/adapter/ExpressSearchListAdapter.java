@@ -47,24 +47,26 @@ public class ExpressSearchListAdapter extends BaseRecyclerViewAdapter<EntityExpr
 
         switch (item.getStatus()){
             case EXPRESS_STATUS_SUCESS:
-                if(TextUtils.isEmpty(item.getRemark())){
-                    itemRemark.setVisibility(View.GONE);
-                }else {
-                    itemRemark.setText(item.getRemark());
-                }
                 itemStep.setVisibility(View.VISIBLE);
                 itemCheckTime.setVisibility(View.VISIBLE);
-                itemCheckTime.setText(CoreTimeUtils.dateToMMdd(item.getSteptime()));
-                itemStep.setText(item.getStepcontext());
+                itemCheckTime.setText(CoreTimeUtils.dateToMMdd(item.getLaststeptime()));
+                itemStep.setText(item.getLaststepcontext());
                 break;
             default:
                 itemStep.setVisibility(View.GONE);
                 itemCheckTime.setVisibility(View.GONE);
-                itemRemark.setVisibility(View.GONE);
                 break;
         }
 
-        itemName.setText(item.getCompanyname()+" "+item.getExpressnum());
+        if(TextUtils.isEmpty(item.getRemark())){
+            itemRemark.setVisibility(View.GONE);
+            itemName.setText(item.getCompanyname()+" "+item.getExpressnum());
+        }else {
+            itemRemark.setVisibility(View.VISIBLE);
+            itemName.setText(item.getRemark());
+            itemRemark.setText(item.getCompanyname()+" "+item.getExpressnum());
+        }
+
         holder.getConvertView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

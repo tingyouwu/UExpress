@@ -31,7 +31,11 @@
     <string name="help_contact">如需帮助请联系</string>
     <string name="no_result">查无记录</string>
     <string name="checknum_company">请核对单号与快递公司</string>
+    <string name="edit_remark">修改备注</string>
     <string name="add_remark">添加备注</string>
+    <string name="add_express">添加单号</string>
+    <string name="scan_express">扫一扫</string>
+    <string name="add_extra_remark">输入备注(可选)</string>
 
     <string name="share_content">我正在使用@U快递，查询并跟踪快递，快递信息及时掌握！推荐你也试试</string>
     <string name="share">分享</string>

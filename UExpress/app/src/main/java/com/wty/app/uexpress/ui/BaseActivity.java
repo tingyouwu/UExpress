@@ -113,25 +113,32 @@ public abstract class BaseActivity extends AppCompatActivity {
         listener = null;
     }
 
-    public void onToastSelect(OnDismissCallbackListener callback){
+    public void dismissAskLoading(final OnDismissCallbackListener callback){
         if(dialog!=null && dialog.isShowing()){
-            dialog.cancel();
+            new CountDownTimer(500,500) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+
+                }
+
+                @Override
+                public void onFinish() {
+                    dialog.setTitleText(callback.msg)
+                            .showCancelButton(true)
+                            .setCancelText("取消")
+                            .setConfirmText("确定")
+                            .setConfirmClickListener(callback)
+                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    sweetAlertDialog.dismiss();
+                                }
+                            })
+                            .changeAlertType(callback.alertType);
+
+                }
+            }.start();
         }
-        if(toastDialog==null || !toastDialog.isShowing()){
-            toastDialog = new SweetAlertDialog(this, callback.alertType);
-            toastDialog.show();
-        }
-        toastDialog.setTitleText(callback.msg)
-                .setConfirmText("确定")
-                .setCancelText("取消")
-                .setConfirmClickListener(callback)
-                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                    }
-                })
-                .changeAlertType(callback.alertType);
     }
 
     public void onToast(OnDismissCallbackListener callback){
@@ -153,15 +160,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             @Override
             public void run() {
                 onToast(new OnDismissCallbackListener(msg,SweetAlertDialog.SUCCESS_TYPE));
-            }
-        });
-    }
-
-    public void onToastNoticeMsg(final String msg){
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                onToastSelect(new OnDismissCallbackListener(msg,SweetAlertDialog.WARNING_TYPE));
             }
         });
     }

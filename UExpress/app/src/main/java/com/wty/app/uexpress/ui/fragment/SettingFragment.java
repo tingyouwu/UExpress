@@ -37,6 +37,7 @@ public class SettingFragment extends BaseFragment {
         activity.getDefaultNavigation().setTitle(getString(R.string.about_us))
                 .getLeftButton()
                 .hide();
+        activity.getDefaultNavigation().getRightButton().hide();
     }
 
     public static class AboutFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
@@ -74,8 +75,7 @@ public class SettingFragment extends BaseFragment {
 
         private void sendEmail(){
             Intent i = new Intent(Intent.ACTION_SEND);
-            // i.setType("text/plain"); //模拟器请使用这行
-            i.setType("message/rfc822"); // 真机上使用这行
+            i.setType("message/rfc822");
             i.putExtra(Intent.EXTRA_EMAIL,
                     new String[] { "2421818708@qq.com" });
             i.putExtra(Intent.EXTRA_SUBJECT, "您的建议");

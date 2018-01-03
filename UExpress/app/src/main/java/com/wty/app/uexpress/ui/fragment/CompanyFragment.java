@@ -99,6 +99,7 @@ public class CompanyFragment extends BaseFragment {
         activity.getDefaultNavigation().setTitle(getString(R.string.phone_send_express))
                 .getLeftButton()
                 .hide();
+        activity.getDefaultNavigation().getRightButton().hide();
     }
 
     SearchView.OnSearchListener searchListener = new SearchView.OnSearchListener() {
