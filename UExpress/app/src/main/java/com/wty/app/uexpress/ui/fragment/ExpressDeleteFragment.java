@@ -36,7 +36,7 @@ public class ExpressDeleteFragment extends BaseExpressFragment {
 
     @Override
     protected List<EntityExpressDALEx> queryServiceList() {
-        List<EntityExpressDALEx> unchecklist = EntityExpressDALEx.get().queryUnCheck();
+        List<EntityExpressDALEx> unchecklist = EntityExpressDALEx.get().queryDeleteWithUnCheck();
         if(unchecklist.size()!=0){
             GetExpressInfoEntity entity = new GetExpressInfoEntity();
             for(EntityExpressDALEx express:unchecklist){

@@ -121,6 +121,14 @@ public class EntityExpressDALEx extends SqliteBaseDALEx {
     }
 
     /**
+     * 查找所有删除状态
+     **/
+    public List<EntityExpressDALEx> queryDeleteWithUnCheck(){
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE recstatus = 0 AND state <> '3' "+ " ORDER BY datetime(createtime) DESC";
+        return findList(sql);
+    }
+
+    /**
      * 更新原数据
      **/
     public static void updateExpressInfo(String json,GetExpressInfoEntity entity){
