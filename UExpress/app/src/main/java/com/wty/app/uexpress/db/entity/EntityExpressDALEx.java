@@ -134,7 +134,7 @@ public class EntityExpressDALEx extends SqliteBaseDALEx {
             express.setFirststeptime(entity.data.get(entity.data.size()-1).time);
             express.setFirststepcontext(entity.data.get(entity.data.size()-1).context);
             //信息更新数量
-            express.setUnreadsize(Math.abs(entity.data.size()-express.getStepsize()));
+            express.setUnreadsize(Math.abs(entity.data.size()-express.getStepsize())+express.getUnreadsize());
             express.setStepsize(entity.data.size());
         }else if(express.getStepsize()!=0){
             //原来的数据是有跟踪信息的 后面查询不到了 那就不需要改变

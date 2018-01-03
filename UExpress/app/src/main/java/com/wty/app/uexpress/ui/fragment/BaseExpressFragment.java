@@ -135,7 +135,7 @@ public abstract class BaseExpressFragment extends BaseFragment {
         ListViewEmptyLayout emptylayout = new ListViewEmptyLayout(getActivity());
         emptylayout.setEmptyText(emptytext_up,emptytext_down);
         listview.addHeaderEmptyView(emptylayout);
-        refreshLocalList();
+        refreshServiceList();
     }
 
     @Override
@@ -189,7 +189,7 @@ public abstract class BaseExpressFragment extends BaseFragment {
         refreshtask = new SimpleTask() {
             @Override
             protected Object doInBackground(String... params) {
-                return queryList();
+                return queryServiceList();
             }
 
             @Override
@@ -203,4 +203,5 @@ public abstract class BaseExpressFragment extends BaseFragment {
     }
 
     abstract protected List<EntityExpressDALEx> queryList();
+    abstract protected List<EntityExpressDALEx> queryServiceList();
 }

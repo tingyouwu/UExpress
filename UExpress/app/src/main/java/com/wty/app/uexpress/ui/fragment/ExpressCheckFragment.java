@@ -29,4 +29,9 @@ public class ExpressCheckFragment extends BaseExpressFragment {
     protected List<EntityExpressDALEx> queryList() {
         return EntityExpressDALEx.get().queryCheck();
     }
+
+    @Override
+    protected List<EntityExpressDALEx> queryServiceList() {
+        return queryList();
+    }
 }
