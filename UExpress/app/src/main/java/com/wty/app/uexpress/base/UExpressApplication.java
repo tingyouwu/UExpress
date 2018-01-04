@@ -12,12 +12,12 @@ public class UExpressApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		if (LeakCanary.isInAnalyzerProcess(this)) {
-			// This process is dedicated to LeakCanary for heap analysis.
-			// You should not init your app in this process.
-			return;
-		}
-		LeakCanary.install(this);
+//		if (LeakCanary.isInAnalyzerProcess(this)) {
+//			// This process is dedicated to LeakCanary for heap analysis.
+//			// You should not init your app in this process.
+//			return;
+//		}
+//		LeakCanary.install(this);
 		UExpressUtil.initDataBase(this,"UExpress_db");
 		Logger.init("UExpress")
                 .methodCount(10)
