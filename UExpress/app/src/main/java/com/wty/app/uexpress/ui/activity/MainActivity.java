@@ -8,19 +8,23 @@ import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wty.app.uexpress.R;
 import com.wty.app.uexpress.base.BroadcastConstants;
 import com.wty.app.uexpress.base.UExpressConstant;
 import com.wty.app.uexpress.data.entity.BaseResponseEntity;
 import com.wty.app.uexpress.data.entity.GetCompanyListEntity;
+import com.wty.app.uexpress.db.ORMManager;
 import com.wty.app.uexpress.db.entity.EntityCompanyDALEx;
 import com.wty.app.uexpress.task.SimpleTask;
+import com.wty.app.uexpress.task.TaskManager;
 import com.wty.app.uexpress.ui.BaseActivity;
 import com.wty.app.uexpress.ui.BaseFragment;
 import com.wty.app.uexpress.ui.fragment.CompanyFragment;
@@ -32,6 +36,8 @@ import com.wty.app.uexpress.util.CoreCommonUtil;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 
@@ -57,14 +63,46 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         if(datatask!=null && datatask.getStatus() == AsyncTask.Status.RUNNING){
             datatask.cancel(true);
         }
-        fragments.clear();
         if(receiver != null){
             unregisterReceiver(receiver);
             receiver = null;
+        }
+        fragments.clear();
+        TaskManager.getInstance().clear();
+        ORMManager.getInstance().closeDB();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        exitBy2Click();
+    }
+
+    /**
+     * 双击退出函数
+     */
+    private static Boolean isExit = false;
+    private void exitBy2Click() {
+        Timer tExit;
+        if (!isExit) {
+            // 准备退出
+            isExit = true;
+            Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+            tExit = new Timer();
+            tExit.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    // 取消退出
+                    isExit = false;
+                }
+            }, 2000);
+        } else {
+            finish();
+            System.exit(0);
+
         }
     }
 

@@ -135,7 +135,6 @@ public abstract class BaseExpressFragment extends BaseFragment {
         ListViewEmptyLayout emptylayout = new ListViewEmptyLayout(getActivity());
         emptylayout.setEmptyText(emptytext_up,emptytext_down);
         listview.addHeaderEmptyView(emptylayout);
-        refreshServiceList();
     }
 
     @Override

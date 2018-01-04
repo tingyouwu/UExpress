@@ -18,7 +18,7 @@ public class TaskManager {
 		return taskManager;
 	}
 
-	//并行线程池，支持同时执行10条线程任务
+	//并行线程池，支持同时执行5条线程任务
 	public ExecutorService getParallelTaskPool(){
 		if(parallelTaskPool == null){
 			parallelTaskPool = Executors.newFixedThreadPool(5);

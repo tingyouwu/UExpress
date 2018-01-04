@@ -51,6 +51,7 @@ public abstract class BaseFragment extends Fragment {
 	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 		super.setUserVisibleHint(isVisibleToUser);
+		Log.d("性能调试", this.getClass().getSimpleName() + " setUserVisibleHint "+isVisibleToUser);
 		if(isVisibleToUser && isInitView){
 			//setUserVisibleHint在onCreateView之前调用的，
 			//在视图未初始化的时候就使用的话，会有空指针异常

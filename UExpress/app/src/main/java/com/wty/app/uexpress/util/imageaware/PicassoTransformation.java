@@ -24,8 +24,8 @@ public class PicassoTransformation implements Transformation {
 
     @Override
     public Bitmap transform(Bitmap source) {
-        Log.i("test","source.getHeight()="+source.getHeight()+",source.getWidth()="+source.getWidth()
-                +",targetWidth="+targetWidth+" ,targetHeight="+targetHeight);
+//        Log.i("test","source.getHeight()="+source.getHeight()+",source.getWidth()="+source.getWidth()
+//                +",targetWidth="+targetWidth+" ,targetHeight="+targetHeight);
 
         if(source.getWidth()==0){
             return source;
@@ -53,7 +53,7 @@ public class PicassoTransformation implements Transformation {
             targetHeight = targetWidth * ((source.getHeight()*100)/source.getWidth())/100;
         }
 
-        Log.i("test","finalWidth="+targetWidth+" ,finalHeight="+targetHeight);
+//        Log.i("test","finalWidth="+targetWidth+" ,finalHeight="+targetHeight);
 
         //如果图片小于设置的宽度，则返回原图
         if(source.getWidth()<targetWidth){

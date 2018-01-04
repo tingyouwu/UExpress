@@ -128,15 +128,16 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     protected void onInitView() {
-        fragments.put(ExpressAllFragment.TAG, new ExpressAllFragment());
         fragments.put(ExpressUnCheckFragment.TAG, new ExpressUnCheckFragment());
         fragments.put(ExpressCheckFragment.TAG, new ExpressCheckFragment());
+        fragments.put(ExpressAllFragment.TAG, new ExpressAllFragment());
         fragments.put(ExpressDeleteFragment.TAG, new ExpressDeleteFragment());
         for (BaseFragment fragment : fragments.values()) {
             fragment.setActivity(activity);
         }
         TabFragmentAdapter adapter = new TabFragmentAdapter(fragments, this.getChildFragmentManager());
         viewpager.setAdapter(adapter);
+        viewpager.setOffscreenPageLimit(2);
         tablayout.setupWithViewPager(viewpager);
         tablayout.setTabTextColors(getResources().getColor(R.color.bottom_normal), getResources().getColor(R.color.bottom_click));
     }
