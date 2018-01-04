@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.PersistableBundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -34,6 +36,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("性能调试", this.getClass().getSimpleName() + " onCreate");
         super.onCreate(savedInstanceState);
         setContentView(getContentLayout());
         unbinder = ButterKnife.bind(this);
@@ -43,7 +46,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        Log.d("性能调试", this.getClass().getSimpleName() + " onSaveInstanceState");
+    }
+
+    @Override
     protected void onDestroy() {
+        Log.d("性能调试", this.getClass().getSimpleName() + " onDestroy");
         super.onDestroy();
         unbinder.unbind();
         if (toastDialog != null && toastDialog.isShowing()) {
