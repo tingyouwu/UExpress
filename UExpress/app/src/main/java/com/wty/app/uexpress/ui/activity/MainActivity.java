@@ -101,8 +101,6 @@ public class MainActivity extends BaseActivity {
             }, 2000);
         } else {
             finish();
-            System.exit(0);
-
         }
     }
 
